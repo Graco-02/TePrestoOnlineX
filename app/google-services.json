@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "414180008158",
+    "firebase_url": "https://teprestoonline-84f4d-default-rtdb.firebaseio.com",
+    "project_id": "teprestoonline-84f4d",
+    "storage_bucket": "teprestoonline-84f4d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414180008158:android:04425d42abad945205624f",
+        "android_client_info": {
+          "package_name": "com.example.teprestoonline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414180008158-75k4dtnae5nv6nab6t6s1j7dcp2m6f4v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-JKKuPjcmTJFM5TFS51A60f6v_0B5NCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414180008158-75k4dtnae5nv6nab6t6s1j7dcp2m6f4v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/inicio_clientes"
+        android:icon="@drawable/usuarios"
+        android:title="Clientes"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/inicio_prestamo"
+        android:icon="@drawable/pagosrecibidos"
+        android:title="prestamo"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/inicio_reporte"
+        android:icon="@drawable/reporte"
+        android:title="reportes"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/inicio_parametro"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Parametros"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/inicio_usuario"
+        android:icon="@drawable/usuario01"
+        android:title="Credenciales"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/salir"
+        android:icon="@android:drawable/btn_dialog"
+        android:title="Salir"
+        app:showAsAction="ifRoom" />
+</menu>
