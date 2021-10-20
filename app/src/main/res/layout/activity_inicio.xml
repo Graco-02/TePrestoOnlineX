@@ -40,12 +40,13 @@
         android:background="@drawable/prestamo2"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="20dp"></LinearLayout>
+        android:padding="50dp"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom|center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:gravity="bottom"
         android:orientation="vertical">
 
         <LinearLayout

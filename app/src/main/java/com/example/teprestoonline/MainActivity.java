@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Usuario_ctr;
@@ -45,13 +46,15 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        if(Usuario.usuario_logueado!=null){
-            Intent lanzadera = new Intent(MainActivity.this, Inicio.class);
-            startActivity(lanzadera);
-        }
+        get_validar_usuario_logueado();
 
     }
 
+
+    public void onRestoreInstanceState(Bundle bundle){
+           get_validar_usuario_logueado();
+
+    }
 
     public void onStart() {
         super.onStart();
@@ -59,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
        // updateUI(currentUser);
     }
+
+
 
     public void get_acceso(View view) {
         EditText txt_nombre = (EditText) findViewById(R.id.main_usuario_txt);
@@ -114,6 +119,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void get_validar_usuario_logueado(){
+        if(Usuario.usuario_logueado!=null){
+            Intent lanzadera = new Intent(MainActivity.this, Inicio.class);
+            startActivity(lanzadera);
+        }
     }
 
 }

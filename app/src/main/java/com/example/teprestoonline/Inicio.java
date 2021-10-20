@@ -3,6 +3,7 @@ package com.example.teprestoonline;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,8 @@ public class Inicio extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // indico que esta pantalla solo puede visializarse conla pantalla vertical
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_inicio);
 
         if(Usuario.usuario_logueado!=null) {

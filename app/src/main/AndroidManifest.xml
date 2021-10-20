@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TePrestoOnline">
-        <activity android:name=".Inicio"></activity>
+        <activity android:name=".mantenimiento_clientes"></activity>
+        <activity android:name=".Inicio" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
