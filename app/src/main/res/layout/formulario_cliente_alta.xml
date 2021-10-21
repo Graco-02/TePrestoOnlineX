@@ -61,7 +61,7 @@
                     android:orientation="horizontal">
 
                     <Spinner
-                        android:id="@+id/tipos_identificacion"
+                        android:id="@+id/cli_form_tipos_identificacion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -69,10 +69,10 @@
                         android:id="@+id/cli_form_identificacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="13"
                         android:ems="10"
                         android:hint="001-0000000-0"
-                        android:inputType="number" />
+                        android:inputType="date"
+                        android:maxLength="13" />
 
                 </LinearLayout>
 
@@ -158,7 +158,8 @@
                     android:digits="12"
                     android:ems="10"
                     android:hint="809-999-9999"
-                    android:inputType="number" />
+                    android:inputType="date"
+                    android:maxLength="15" />
 
                 <EditText
                     android:id="@+id/cli_form_correo"
@@ -177,18 +178,19 @@
                 >
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/cli_form_guardar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="Guardar"
+                    android:layout_marginRight="10dp"/>
 
                 <Button
                     android:id="@+id/cli_form_cancelar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="Cancelar" />
             </LinearLayout>
 
         </LinearLayout>

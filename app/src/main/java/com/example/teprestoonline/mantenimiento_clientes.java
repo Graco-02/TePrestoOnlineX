@@ -29,7 +29,6 @@ public class mantenimiento_clientes extends AppCompatActivity {
 
         super.onRestoreInstanceState(bundle);
 
-
     }
 
 
@@ -46,7 +45,7 @@ public class mantenimiento_clientes extends AppCompatActivity {
 
         switch (id){
             case R.id.cli_mtn_menu_alta:
-
+                new ventana_alta_cliente(this).set_view_alta();
                 break;
         }
 

@@ -27,7 +27,8 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Identificacion"
-            android:inputType="textPersonName" />
+            android:inputType="date"
+            android:maxLength="13" />
 
         <ImageButton
             android:id="@+id/cli_mtn_barra_busqueda_bt"

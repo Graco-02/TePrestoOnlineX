@@ -3,6 +3,7 @@ package com.example.teprestoonline;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
@@ -73,7 +74,8 @@ public class Inicio extends AppCompatActivity {
 
         switch (id){
             case R.id.inicio_clientes:
-
+                Intent lanzadera = new Intent(this,mantenimiento_clientes.class);
+                startActivity(lanzadera);
                 break;
             case R.id.inicio_prestamo:
 
