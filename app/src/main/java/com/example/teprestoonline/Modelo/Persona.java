@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class Persona extends Direccion {
+public class Persona{
     private String id;
     private String fecha_alta_humana;
     private long fecha_alta_unix;
@@ -17,6 +17,15 @@ public class Persona extends Direccion {
     private String identificacion;
     private String tipo_identificacion;
     private Contacto contacto;
+    private Direccion direccion;
+
+    public Direccion getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Direccion direccion) {
+        this.direccion = direccion;
+    }
 
     public Contacto getContacto() {
         return contacto;
