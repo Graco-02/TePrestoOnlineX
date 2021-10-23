@@ -87,6 +87,8 @@ public class mantenimiento_clientes extends AppCompatActivity {
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         if(hijo.getValue(Cliente.class).getId_usuario().equalsIgnoreCase(Usuario.usuario_logueado.getId())) {
                             Cliente cli = hijo.getValue(Cliente.class);
+                            listado_clientes.add(cli);
+
                             LayoutInflater inflater = getLayoutInflater();
                             View v = inflater.inflate(R.layout.cliente_lista, null);
 
