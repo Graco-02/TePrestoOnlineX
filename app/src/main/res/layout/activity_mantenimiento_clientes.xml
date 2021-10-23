@@ -5,20 +5,20 @@
     android:id="@+id/clientes_mnt_contenido_principal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mantenimiento_clientes" >
+    android:background="@color/fondo"
+    android:orientation="vertical"
+    tools:context=".mantenimiento_clientes">
 
     <LinearLayout
         android:id="@+id/clientes_mtn_barra_busqueda"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/purple_200"
-        android:gravity="top"
-        android:orientation="horizontal"
-        android:padding="20dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="5dp"
-        >
+        android:background="@color/purple_200"
+        android:orientation="horizontal"
+        android:padding="20dp">
 
         <EditText
             android:id="@+id/cli_mtn_barra_busqueda_txt"
@@ -40,24 +40,33 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/cli_mnt_formulario"
+        android:id="@+id/clientes_modifica"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/teal_200"
         android:orientation="vertical"
         android:padding="20dp"
-        android:visibility="gone"></LinearLayout>
+        android:visibility="gone" />
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/clientes_mnt_lista"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/fondo"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:padding="10dp"
+
             />
     </ScrollView>
 </LinearLayout>

@@ -13,7 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.teprestoonline.Controladores.Cliente_ctr;
 import com.example.teprestoonline.Controladores.Usuario_ctr;
+import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -120,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     private void get_validar_usuario_logueado(){
         if(Usuario.usuario_logueado!=null){
