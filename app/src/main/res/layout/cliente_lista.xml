@@ -19,7 +19,7 @@
 
         <EditText
             android:id="@+id/cli_view_nombre"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Nombres"
@@ -27,7 +27,7 @@
 
         <EditText
             android:id="@+id/cli_view_apellidos"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Apellidos"
