@@ -23,13 +23,18 @@ public class Cliente_ctr {
     public static final String BBDD_NAME = "clientes";
 
     public void set_cliente(Cliente cli){
-        myRef.child(BBDD_NAME).child(cli.getPersona().getIdentificacion()).setValue(cli);
+        myRef.child(cli.getPersona().getIdentificacion()).setValue(cli);
+    }
+
+    public void set_eliminar(Cliente cli){
+       // System.out.println(cli.getPersona().getIdentificacion());
+        myRef.child(cli.getPersona().getIdentificacion()).removeValue();
     }
 
     public Cliente_ctr(Context con){
        // FirebaseApp.initializeApp(con);
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
+        myRef = database.getReference(BBDD_NAME);
     }
 
 

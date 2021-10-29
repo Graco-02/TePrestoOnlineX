@@ -3,7 +3,7 @@ package com.example.teprestoonline;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -12,10 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Cliente_ctr;
@@ -44,6 +45,7 @@ public class mantenimiento_clientes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mantenimiento_clientes);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        ln = (LinearLayout) findViewById(R.id.clientes_mnt_lista);
 
         txt_identificacion = (EditText) findViewById(R.id.cli_mtn_barra_busqueda_txt);
         txt_identificacion.setOnKeyListener(new View.OnKeyListener() {
@@ -60,7 +62,26 @@ public class mantenimiento_clientes extends AppCompatActivity {
             }
         });
 
-      //  set_listar_todos();
+
+        ImageButton bt_limpiar = (ImageButton) findViewById(R.id.cli_mtn_barra_limpiar_bt);
+        bt_limpiar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                set_listar_todos();
+                bt_limpiar.setVisibility(View.GONE);
+                txt_identificacion.setText("");
+            }
+        });
+
+        ImageButton bt_buscar = (ImageButton) findViewById(R.id.cli_mtn_barra_busqueda_bt);
+        bt_buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                get_buscar_cliente(txt_identificacion.getText().toString());
+                bt_limpiar.setVisibility(View.VISIBLE);
+            }
+        });
+
 
     }
 
@@ -70,71 +91,54 @@ public class mantenimiento_clientes extends AppCompatActivity {
         set_listar_todos();
     }
 
-    private void set_listar_todos(){
-        listado_clientes = new ArrayList<>();
-        ln = (LinearLayout) findViewById(R.id.clientes_mnt_lista);
-        ln.removeAllViews();
 
+    private void get_buscar_cliente(String identificacion){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference ref = database.child(Cliente_ctr.BBDD_NAME);
-
-        Query usuQuery = ref.orderByChild("id_usuario").equalTo(Usuario.usuario_logueado.getId());
-
+        final DatabaseReference ref = database.child(Cliente_ctr.BBDD_NAME);
+        final Query usuQuery = ref.orderByChild("id_usuario").equalTo(Usuario.usuario_logueado.getId());
         usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
+                    ln.removeAllViews();
+                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
+                        if(
+                                hijo.getValue(Cliente.class).getId_usuario().equalsIgnoreCase(Usuario.usuario_logueado.getId())
+                                &&
+                                hijo.getValue(Cliente.class).getPersona().getIdentificacion().equalsIgnoreCase(identificacion)
+                        ) {
+                            Cliente cli = hijo.getValue(Cliente.class);
+                            ln.addView(set_agregar_cliente(cli));
+                        }
+                    }
+                }else{
+                   Toast.makeText(mantenimiento_clientes.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void set_listar_todos(){
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference ref = database.child(Cliente_ctr.BBDD_NAME);
+        final Query usuQuery = ref.orderByChild("id_usuario").equalTo(Usuario.usuario_logueado.getId());
+
+
+        usuQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    ln.removeAllViews();
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         if(hijo.getValue(Cliente.class).getId_usuario().equalsIgnoreCase(Usuario.usuario_logueado.getId())) {
                             Cliente cli = hijo.getValue(Cliente.class);
-                            listado_clientes.add(cli);
-
-                            LayoutInflater inflater = getLayoutInflater();
-                            View v = inflater.inflate(R.layout.cliente_lista, null);
-
-                            EditText txt_nombres = (EditText) v.findViewById(R.id.cli_view_nombre);
-                            EditText txt_apellido = (EditText) v.findViewById(R.id.cli_view_apellidos);
-                            EditText txt_identificacion = (EditText) v.findViewById(R.id.cli_view_identificacion);
-                            Spinner tipo_doc = (Spinner) v.findViewById(R.id.cli_view_tipos_identificacion);
-
-                            txt_nombres.setEnabled(false);
-                            txt_apellido.setEnabled(false);
-                            txt_identificacion.setEnabled(false);
-                            tipo_doc.setEnabled(false);
-
-                            //lleno el combo tipos de documentos
-                            List<String> tipos_documento = new ArrayList<String>();
-                            tipos_documento.add("CED");
-                            tipos_documento.add("PSS");
-                            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(mantenimiento_clientes.this,
-                                   android.R.layout.simple_spinner_item, tipos_documento);
-                            // Drop down layout style - list view with radio button
-                            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            // attaching data adapter to spinner
-                            tipo_doc.setAdapter(dataAdapter);
-
-                            txt_nombres.setText(cli.getPersona().getNombres());
-                            txt_apellido.setText(cli.getPersona().getApellidos());
-                            txt_identificacion.setText(cli.getPersona().getIdentificacion());
-
-                            if(cli.getPersona().getTipo_identificacion().equals("CED")){
-                                tipo_doc.setSelection(0);
-                            }else{
-                                tipo_doc.setSelection(1);
-                            }
-
-
-                           v.setOnClickListener(new View.OnClickListener() {//agrego accion al clicar sobre un cliente
-                                @Override
-                                public void onClick(View view) {
-                                    EditText txt_nombres = (EditText) view.findViewById(R.id.cli_view_nombre);
-                                    Toast.makeText(getApplicationContext(),
-                                            txt_nombres.getText().toString(),Toast.LENGTH_LONG).show();
-                                }
-                            });
-
-
-                            ln.addView(v);
+                            ln.addView(set_agregar_cliente(cli));
                         }
                     }
                 }else{
@@ -144,9 +148,184 @@ public class mantenimiento_clientes extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // do sontime
+
             }
         });
+
+    }
+
+    private View set_agregar_cliente(Cliente cli){
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.cliente_lista, null);
+        Cliente cl = cli; // creo una instacia final para poder utilizarla en los botones
+
+        EditText txt_nombres = (EditText) v.findViewById(R.id.cli_view_nombre);
+        EditText txt_apellido = (EditText) v.findViewById(R.id.cli_view_apellidos);
+        EditText txt_identificacion = (EditText) v.findViewById(R.id.cli_view_identificacion);
+        Spinner tipo_doc = (Spinner) v.findViewById(R.id.cli_view_tipos_identificacion);
+
+        txt_nombres.setEnabled(false);
+        txt_apellido.setEnabled(false);
+        txt_identificacion.setEnabled(false);
+        tipo_doc.setEnabled(false);
+
+
+        tipo_doc.setAdapter(proceso_spiner());
+
+        txt_nombres.setText(cl.getPersona().getNombres());
+        txt_apellido.setText(cl.getPersona().getApellidos());
+        txt_identificacion.setText(cl.getPersona().getIdentificacion());
+
+        if(cl.getPersona().getTipo_identificacion().equals("CED")){
+            tipo_doc.setSelection(0);
+        }else{
+            tipo_doc.setSelection(1);
+        }
+
+
+        ImageButton bt_modificar = (ImageButton) v.findViewById(R.id.cli_view_bt_modificar);
+        bt_modificar.setOnClickListener(new View.OnClickListener() {//agrego accion al clicar sobre un cliente
+            @Override
+            public void onClick(View view) {
+                set_visualizar_cliente(cl);
+            }
+        });
+
+
+        ImageButton bt_eliminar = (ImageButton) v.findViewById(R.id.cli_view_bt_eliminar);
+        bt_eliminar.setOnClickListener(new View.OnClickListener() {//agrego accion al clicar sobre un cliente
+            @Override
+            public void onClick(View view) {
+               new Cliente_ctr(mantenimiento_clientes.this).set_eliminar(cl);
+            }
+        });
+
+        return v;
+    }
+
+
+    private ArrayAdapter<String> proceso_spiner(){
+        //lleno el combo tipos de documentos
+        List<String> tipos_documento = new ArrayList<String>();
+        tipos_documento.add("CED");
+        tipos_documento.add("PSS");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(mantenimiento_clientes.this,
+                android.R.layout.simple_spinner_item, tipos_documento);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return dataAdapter;
+    }
+
+
+    private void set_visualizar_cliente(Cliente cli){
+        LayoutInflater inflater = getLayoutInflater();
+        View v_datos_cli = inflater.inflate(R.layout.formulario_cliente_alta, null);
+
+        LinearLayout view_cliente = (LinearLayout) this.findViewById(R.id.clientes_modifica);
+        view_cliente.removeAllViews();
+        view_cliente.addView(v_datos_cli);
+        view_cliente.setVisibility(View.VISIBLE);
+
+        EditText txt_nombres = (EditText)  v_datos_cli.findViewById(R.id.cli_form_nombre);
+        EditText txt_apellidos = (EditText)  v_datos_cli.findViewById(R.id.cli_form_apellidos);
+        EditText txt_identificacion = (EditText)  v_datos_cli.findViewById(R.id.cli_form_identificacion);
+
+        Spinner tipo_doc = (Spinner) v_datos_cli.findViewById(R.id.cli_form_tipos_identificacion);
+        tipo_doc.setAdapter(proceso_spiner());
+        if(cli.getPersona().getTipo_identificacion().equals("CED")){
+            tipo_doc.setSelection(0);
+        }else{
+            tipo_doc.setSelection(1);
+        }
+
+
+        EditText txt_municipio = (EditText)  v_datos_cli.findViewById(R.id.cli_form_municipio);
+        EditText txt_sector = (EditText)  v_datos_cli.findViewById(R.id.cli_form_sector);
+        EditText txt_calle = (EditText)  v_datos_cli.findViewById(R.id.cli_form_calle);
+        EditText txt_vivienda = (EditText)  v_datos_cli.findViewById(R.id.cli_form_vivienda);
+
+        EditText txt_telefono = (EditText)  v_datos_cli.findViewById(R.id.cli_form_telefono);
+        EditText txt_correo = (EditText)  v_datos_cli.findViewById(R.id.cli_form_correo);
+
+        txt_nombres.setText(cli.getPersona().getNombres());
+        txt_apellidos.setText(cli.getPersona().getApellidos());
+        txt_identificacion.setText(cli.getPersona().getIdentificacion());
+        txt_identificacion.setEnabled(false);
+
+        txt_municipio.setText(cli.getPersona().getDireccion().getMunicipio());
+        txt_sector.setText(cli.getPersona().getDireccion().getSector());
+        txt_calle.setText(cli.getPersona().getDireccion().getCalle());
+        txt_vivienda.setText(cli.getPersona().getDireccion().getVivienda());
+
+        txt_telefono.setText(cli.getPersona().getContacto().getTelefono());
+        txt_correo.setText(cli.getPersona().getContacto().getCorreo());
+
+        txt_identificacion.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(txt_identificacion.getText().toString().length()==3){
+                    txt_identificacion.setText(txt_identificacion.getText().toString()+"-");
+                    txt_identificacion.setSelection(4);
+                }else if(txt_identificacion.getText().toString().length()==11){
+                    txt_identificacion.setText(txt_identificacion.getText().toString()+"-");
+                    txt_identificacion.setSelection(12);
+                }
+                return false;
+            }
+        });
+
+        txt_telefono.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(txt_telefono.getText().toString().length()==3){
+                    txt_telefono.setText(txt_telefono.getText().toString()+"-");
+                    txt_telefono.setSelection(4);
+                }else if(txt_telefono.getText().toString().length()==7){
+                    txt_telefono.setText(txt_telefono.getText().toString()+"-");
+                    txt_telefono.setSelection(8);
+                }
+                return false;
+            }
+        });
+
+        Button bt_cancelar = (Button)  v_datos_cli.findViewById(R.id.cli_form_cancelar);
+        bt_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view_cliente.setVisibility(View.GONE);
+            }
+        });
+
+
+        Button bt_guardar = (Button)  v_datos_cli.findViewById(R.id.cli_form_guardar);
+        bt_guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view_cliente.setVisibility(View.GONE);
+
+                cli.set_datos_ultima_modificaion(mantenimiento_clientes.this);
+                cli.getPersona().set_datos_ultima_modificaion(mantenimiento_clientes.this);
+                cli.getPersona().getDireccion().set_datos_ultima_modificaion(mantenimiento_clientes.this);
+                cli.getPersona().getContacto().set_datos_ultima_modificaion(mantenimiento_clientes.this);
+
+                cli.getPersona().setNombres(txt_nombres.getText().toString());
+                cli.getPersona().setApellidos(txt_apellidos.getText().toString());
+                cli.getPersona().setIdentificacion(txt_identificacion.getText().toString());
+                cli.getPersona().setTipo_identificacion(String.valueOf(tipo_doc.getSelectedItem()));
+
+                cli.getPersona().getDireccion().setMunicipio(txt_municipio.getText().toString());
+                cli.getPersona().getDireccion().setSector(txt_sector.getText().toString());
+                cli.getPersona().getDireccion().setCalle(txt_calle.getText().toString());
+                cli.getPersona().getDireccion().setVivienda(txt_vivienda.getText().toString());
+
+                cli.getPersona().getContacto().setTelefono(txt_telefono.getText().toString());
+                cli.getPersona().getContacto().setCorreo(txt_correo.getText().toString());
+
+                new Cliente_ctr(mantenimiento_clientes.this).set_cliente(cli);
+            }
+        });
+
+
     }
 
     public void  onSaveInstanceState(Bundle bundle){
@@ -157,7 +336,6 @@ public class mantenimiento_clientes extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle bundle){
 
         super.onRestoreInstanceState(bundle);
-        set_listar_todos();
     }
 
 
@@ -166,8 +344,7 @@ public class mantenimiento_clientes extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_clientes,menu);
         return true;
     }
-
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem opcion_menu){
         int id = opcion_menu.getItemId();
@@ -175,7 +352,6 @@ public class mantenimiento_clientes extends AppCompatActivity {
         switch (id){
             case R.id.cli_mtn_menu_alta:
                 new ventana_alta_cliente(this).set_view_alta();
-                set_listar_todos();
                 break;
         }
 
