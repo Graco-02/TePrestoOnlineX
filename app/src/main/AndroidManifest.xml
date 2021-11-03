@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.teprestoonline">
+    package="com.example.teprestoonline" >
 
     <application
         android:allowBackup="true"
@@ -8,10 +8,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TePrestoOnline">
-        <activity android:name=".mantenimiento_clientes"></activity>
+        android:theme="@style/Theme.TePrestoOnline" >
+        <activity android:name=".listado_prestamo" >
+        </activity>
+        <activity android:name=".listado_prestamos" >
+        </activity>
+        <activity android:name=".mantenimiento_clientes" />
         <activity android:name=".Inicio" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

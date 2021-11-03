@@ -23,7 +23,7 @@
                 android:background="@color/purple_200"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/textView7"
@@ -188,6 +188,8 @@
                     android:id="@+id/prestamo_alta_cantidad_cuotas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="false"
@@ -198,8 +200,10 @@
                     android:id="@+id/prestamo_alta_cuota"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:enabled="false"
                     android:hint="Cuota"
                     android:inputType="number" />
             </LinearLayout>
@@ -210,7 +214,7 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/prestamo_alta_opcion_diario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -218,21 +222,21 @@
                     android:text="Diario" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/prestamo_alta_opcion_semanal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Semanal" />
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
+                    android:id="@+id/prestamo_alta_opcion_quincenal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Quincenal" />
 
                 <RadioButton
-                    android:id="@+id/radioButton4"
+                    android:id="@+id/prestamo_alta_opcion_mensual"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -242,35 +246,40 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/purple_200"
                 android:orientation="horizontal">
 
+                <CheckBox
+                    android:id="@+id/prestamo_alta_imprimir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Imprimir" />
+
+                <CheckBox
+                    android:id="@+id/prestamo_alta_generar_contrato"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="generar contrato" />
+
                 <ImageButton
-                    android:id="@+id/imageButton3"
+                    android:id="@+id/prestamo_alta_bt_crear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:srcCompat="@android:drawable/ic_input_add" />
 
                 <ImageButton
-                    android:id="@+id/imageButton4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_delete" />
-
-                <ImageButton
-                    android:id="@+id/imageButton5"
+                    android:id="@+id/prestamo_alta_bt_limpiar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:srcCompat="@android:drawable/ic_menu_revert" />
-
-                <CheckBox
-                    android:id="@+id/checkBox5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="generar contrato" />
 
             </LinearLayout>
 

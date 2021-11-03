@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -20,7 +23,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Cliente_ctr;
+import com.example.teprestoonline.Controladores.Prestamo_ctr;
 import com.example.teprestoonline.Modelo.Cliente;
+import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -196,11 +201,59 @@ public class mantenimiento_clientes extends AppCompatActivity {
         bt_eliminar.setOnClickListener(new View.OnClickListener() {//agrego accion al clicar sobre un cliente
             @Override
             public void onClick(View view) {
-               new Cliente_ctr(mantenimiento_clientes.this).set_eliminar(cl);
+              set_mensage("Esta seguro de eliminar el registro?",cl,1);
+            }
+        });
+
+
+        ImageButton bt_crear_prestamo = (ImageButton) v.findViewById(R.id.cli_view_bt_alta_prestamo);
+        bt_crear_prestamo.setOnClickListener(new View.OnClickListener() {//agrego accion al clicar sobre un cliente
+            @Override
+            public void onClick(View view) {
+                new prestamo_alta(mantenimiento_clientes.this).set_view_alta(cli);
+            }
+        });
+
+        ImageButton bt_listar_prestamo = (ImageButton) v.findViewById(R.id.cli_view_bt_listar_prestamo);
+        bt_listar_prestamo.setOnClickListener(new View.OnClickListener() {//agrego accion al clicar sobre un cliente
+            @Override
+            public void onClick(View view) {
+                //codigo para listar los prestamos por cliente
+                Intent lanzadera = new Intent(mantenimiento_clientes.this,listado_prestamo.class);
+                lanzadera.putExtra("id_cliente",cl.getId());
+                lanzadera.putExtra("id_usuario",cl.getId_usuario());
+                startActivity(lanzadera);
             }
         });
 
         return v;
+    }
+
+    private void set_mensage(String mensaje, Cliente c, int opcion){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mantenimiento_clientes.this);
+        builder.setTitle("Notificacion ");
+        builder.setMessage(mensaje);
+        builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if(opcion==0) {// opcion 0 para modificar
+
+                }else{// de lo contrario elimino
+                    new Cliente_ctr(mantenimiento_clientes.this).set_eliminar(c);
+                }
+                Toast.makeText(mantenimiento_clientes.this,"Correcto",Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
 

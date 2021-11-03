@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class Prestamo {
+public class Prestamo extends Prestamo_cuota{
 
     private String id;
     private String fecha_alta_humana;
@@ -22,7 +22,16 @@ public class Prestamo {
     private String fecha_ult_cobro;
     private String fecha_ult_pago;
     private int periodo;
+    private int tipo;
 
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
 
     public int getPeriodo() {
         return periodo;

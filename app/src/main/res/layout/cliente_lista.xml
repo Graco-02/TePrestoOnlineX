@@ -21,6 +21,7 @@
             android:id="@+id/cli_view_nombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:ems="10"
             android:hint="Nombres"
             android:inputType="textPersonName" />
@@ -29,6 +30,7 @@
             android:id="@+id/cli_view_apellidos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:ems="10"
             android:hint="Apellidos"
             android:inputType="textPersonName" />
@@ -41,7 +43,8 @@
             <Spinner
                 android:id="@+id/cli_view_tipos_identificacion"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp" />
 
             <EditText
                 android:id="@+id/cli_view_identificacion"
@@ -65,16 +68,31 @@
         <ImageButton
             android:id="@+id/cli_view_bt_modificar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@android:drawable/ic_menu_edit" />
 
         <ImageButton
             android:id="@+id/cli_view_bt_eliminar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@android:drawable/ic_menu_delete" />
+
+        <ImageButton
+            android:id="@+id/cli_view_bt_alta_prestamo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/prestamo3_5" />
+
+        <ImageButton
+            android:id="@+id/cli_view_bt_listar_prestamo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/pagosrecibidos_2" />
+
     </LinearLayout>
 
 
