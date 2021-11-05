@@ -15,6 +15,11 @@ import com.example.teprestoonline.Controladores.Prestamo_ctr;
 import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Prestamo_cuota;
+import com.example.teprestoonline.Modelo.amortizacion_cuota;
+import com.example.teprestoonline.utilidades.Fecha_utiliti;
+
+import java.sql.Date;
+import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -127,7 +132,7 @@ public class prestamo_alta {
                      if(opc_cuota.isChecked()){
                          p.setTipo(1); // tipo 1 = Cuotas
 
-                        p.setCantida_cuotas_restantes(Integer.parseInt(txt_cant_cuotas.getText().toString()));
+                         p.setCantida_cuotas_restantes(Integer.parseInt(txt_cant_cuotas.getText().toString()));
                          p.setCantidad_cuotas(Integer.parseInt(txt_cant_cuotas.getText().toString()));
 
                          double monto = p.getMonto_financiado();
@@ -135,7 +140,11 @@ public class prestamo_alta {
                          int ganancia = Integer.parseInt(String.valueOf(Math.round((monto * tasa))));
                          double restante = monto + ganancia;
                          double cuota = restante  / p.getCantidad_cuotas();
+                         double interes_cuota = (double) (ganancia) / p.getCantidad_cuotas();
+                         double capital_cuota = (double) (monto) / p.getCantidad_cuotas();
 
+                         p.setInteres_cuota(interes_cuota);
+                         p.setCapital_cuota(capital_cuota);
                          p.setCuota(cuota);
                          p.setRestante(restante);
                      }
@@ -143,11 +152,8 @@ public class prestamo_alta {
                      txt_restante.setText(""+p.getRestante());
                      txt_cuota.setText(""+p.getCuota());
                      ventana.dismiss();
-                     set_mensage("Esta seguro de guardar los cambios?",p);
-                   //  controlador_prestamo.set_prestamo(p);
-                    // Toast.makeText(prestamo_alta.this.actividad,"Agregado",Toast.LENGTH_LONG).show();
 
-                   //  ventana.dismiss();
+                     set_mensage("Esta seguro de guardar los cambios?",p);
                  }
              }
          });
@@ -279,6 +285,9 @@ public class prestamo_alta {
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 controlador_prestamo.set_prestamo(p);
+                if(p.getTipo()==1){
+                    set_proceso_amortizaciones(p);
+                }
                 Toast.makeText(prestamo_alta.this.actividad,"Agregado",Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
@@ -296,6 +305,34 @@ public class prestamo_alta {
 
     }
 
+
+    protected void set_proceso_amortizaciones(Prestamo p){
+        amortizacion_cuota amorizacion =null;
+        String fecha_prox_cobro=p.getFecha_ult_cobro();
+
+        if (fecha_prox_cobro.equals("0001-01-01")) {
+            fecha_prox_cobro = new Fecha_utiliti().getFechaSystemaYYMMDD();
+        }
+
+        for(int cont=0;cont<p.getCantidad_cuotas();cont++){// hago un bucle por la cantidad de cuotas que se parametrizo el prestamo
+            amorizacion  = new amortizacion_cuota();
+            amorizacion.set_datos_unicos();
+            amorizacion.set_datos_ultima_modificaion();
+
+            String nueva_fecha = new Fecha_utiliti().suma_dias3(
+                    ((cont + 1) * p.getPeriodo()), fecha_prox_cobro
+            );
+
+            amorizacion.setId_prestamo(p.getId());
+            amorizacion.setFecha_cuota(nueva_fecha);
+            amorizacion.setEstado(3);
+            amorizacion.setCapital(p.getCapital_cuota());
+            amorizacion.setInteres(p.getInteres_cuota());
+            amorizacion.setCuota(p.getCuota());
+            amorizacion.setFecha_pago("0001-01-01");
+            controlador_prestamo.set_prestamo_amortizaciones(amorizacion);
+        }
+    }
 
 
 }

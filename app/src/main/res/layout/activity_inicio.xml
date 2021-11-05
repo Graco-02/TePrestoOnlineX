@@ -50,10 +50,35 @@
         android:padding="50dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/inicio_lanzadera"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:longClickable="false"
+            android:onClick="set_proceso_cobro"
             app:srcCompat="@drawable/prestamo2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/inicio_proceso_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/inicio_pantalla_proceso"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/incio_proceso_cobro_barra_estado"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp" />
     </LinearLayout>
 
 

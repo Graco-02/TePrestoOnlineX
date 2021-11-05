@@ -19,9 +19,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical"
                 android:background="@color/white">
 
@@ -99,9 +99,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="70" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
@@ -165,7 +166,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
@@ -245,18 +246,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView17"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Restante"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/prestamo_view_restante"
@@ -267,11 +258,21 @@
                         android:inputType="numberSigned"
                         android:text="0"
                         android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Restante"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -296,7 +297,9 @@
                             android:ems="10"
                             android:enabled="false"
                             android:inputType="date" />
+
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -319,12 +322,13 @@
                             android:ems="10"
                             android:enabled="false"
                             android:inputType="date" />
+
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@color/purple_200"
                     android:orientation="horizontal"
@@ -343,6 +347,53 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:srcCompat="@android:drawable/ic_menu_delete" />
+
+                    <ImageButton
+                        android:id="@+id/prestamo_view_bt_listar_amort"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:srcCompat="@android:drawable/ic_menu_agenda" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/prestamo_view_amorizaciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple_200"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="AMORIZACIONES"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/prestamo_view_lista_amortizaciones"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical" />
+                    </ScrollView>
                 </LinearLayout>
             </LinearLayout>
 

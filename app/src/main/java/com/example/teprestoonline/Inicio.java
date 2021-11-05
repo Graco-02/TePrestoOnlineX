@@ -3,14 +3,21 @@ package com.example.teprestoonline;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.teprestoonline.Controladores.Prestamo_ctr;
+import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Usuario;
 
 public class Inicio extends AppCompatActivity {
@@ -77,9 +84,6 @@ public class Inicio extends AppCompatActivity {
                 Intent lanzadera = new Intent(this,mantenimiento_clientes.class);
                 startActivity(lanzadera);
                 break;
-            case R.id.inicio_prestamo:
-
-                break;
             case R.id.inicio_reporte:
 
                 break;
@@ -97,6 +101,33 @@ public class Inicio extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(opcion_menu);
+    }
+
+    private void set_mensage(String mensaje ){
+        AlertDialog.Builder builder = new AlertDialog.Builder(Inicio.this);
+        builder.setTitle("Notificacion ");
+        builder.setMessage(mensaje);
+        LinearLayout ln = (LinearLayout) findViewById(R.id.inicio_proceso_view);
+        builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                ln.setVisibility(View.VISIBLE);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                ln.setVisibility(View.GONE);
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void set_proceso_cobro(View v){
+        set_mensage("Desea lanzar el proceso de actualizacion de saldos?");
     }
 
 }

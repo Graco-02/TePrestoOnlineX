@@ -12,6 +12,8 @@ public class Prestamo_cuota {
     private int cantidad_cuotas;
     private int cantida_cuotas_restantes;
     private double cuota;
+    private double capital_cuota;
+    private double interes_cuota;
     private ArrayList<String> fechas;
 
     public Prestamo_cuota(){
@@ -56,6 +58,22 @@ public class Prestamo_cuota {
 
     public void set_eliminar_fecha(String fecha){
         fechas.remove(fecha);
+    }
+
+    public double getCapital_cuota() {
+        return capital_cuota;
+    }
+
+    public void setCapital_cuota(double capital_cuota) {
+        this.capital_cuota = capital_cuota;
+    }
+
+    public double getInteres_cuota() {
+        return interes_cuota;
+    }
+
+    public void setInteres_cuota(double interes_cuota) {
+        this.interes_cuota = interes_cuota;
     }
 
 }

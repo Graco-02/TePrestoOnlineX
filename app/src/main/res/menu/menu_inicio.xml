@@ -8,11 +8,6 @@
         android:title="Clientes"
         app:showAsAction="always" />
     <item
-        android:id="@+id/inicio_prestamo"
-        android:icon="@drawable/pagosrecibidos"
-        android:title="prestamo"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/inicio_reporte"
         android:icon="@drawable/reporte"
         android:title="reportes"
