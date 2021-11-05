@@ -114,10 +114,10 @@
 
                         <TextView
                             android:id="@+id/textView12"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dp"
-                            android:layout_weight="1"
+                            android:layout_weight="50"
                             android:text="Monto Financiado"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -125,9 +125,9 @@
 
                         <TextView
                             android:id="@+id/textView13"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="50"
                             android:text="Tasa"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -141,10 +141,10 @@
 
                         <EditText
                             android:id="@+id/prestamo_view_monto_financiado"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dp"
-                            android:layout_weight="1"
+                            android:layout_weight="50"
                             android:ems="10"
                             android:enabled="false"
                             android:inputType="numberSigned"
@@ -153,9 +153,9 @@
 
                         <EditText
                             android:id="@+id/prestamo_view_tasa"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="50"
                             android:ems="10"
                             android:enabled="false"
                             android:inputType="numberSigned"
@@ -165,10 +165,12 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/prestamo_view_datos_cuotas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -177,27 +179,28 @@
 
                         <TextView
                             android:id="@+id/textView14"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="25"
                             android:text="Cantidad de Cuotas"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/textView15"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Cantidad Cutas Restantes"
+                            android:layout_weight="50"
+                            android:text="Cantidad Cuotas Restantes"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/textView16"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="25"
                             android:text="Cuota"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textStyle="bold" />
@@ -210,9 +213,10 @@
 
                         <EditText
                             android:id="@+id/prestamo_view_cantcuo"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="25"
                             android:ems="10"
                             android:enabled="false"
                             android:inputType="numberSigned"
@@ -221,9 +225,9 @@
 
                         <EditText
                             android:id="@+id/prestamo_view_cantcuorest"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="50"
                             android:ems="10"
                             android:enabled="false"
                             android:inputType="numberSigned"
@@ -232,10 +236,10 @@
 
                         <EditText
                             android:id="@+id/prestamo_view_cuota"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:layout_weight="1"
+                            android:layout_weight="25"
                             android:ems="10"
                             android:enabled="false"
                             android:inputType="numberSigned"
@@ -249,6 +253,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Restante"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
                     <EditText
                         android:id="@+id/prestamo_view_restante"
                         android:layout_width="match_parent"
@@ -259,15 +273,6 @@
                         android:text="0"
                         android:textAlignment="center" />
 
-                    <TextView
-                        android:id="@+id/textView17"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Restante"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout

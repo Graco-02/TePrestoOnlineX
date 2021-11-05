@@ -45,6 +45,7 @@ public class prestamo_alta {
     private EditText txt_monto_finaciado;
     private EditText txt_tasa;
     private EditText txt_restante;
+    private EditText txt_fecha_inicio;
     private CheckBox opc_regular;
     private CheckBox opc_cuota;
     private Cliente cliente;
@@ -87,6 +88,7 @@ public class prestamo_alta {
          txt_restante = (EditText) v.findViewById(R.id.prestamo_alta_restante);
          opc_regular = (CheckBox) v.findViewById(R.id.prestamo_alta_opcion_regular);
          opc_cuota = (CheckBox) v.findViewById(R.id.prestamo_alta_opcion_cuota);
+         txt_monto_finaciado = (EditText) v.findViewById(R.id.prestamo_alta_fecha_incio);
 
          txt_cant_cuotas = (EditText) v.findViewById(R.id.prestamo_alta_cantidad_cuotas);
          txt_cuota = (EditText) v.findViewById(R.id.prestamo_alta_cuota);
@@ -111,7 +113,11 @@ public class prestamo_alta {
                      p.setId_cliente(prestamo_alta.this.cliente.getId());
                      p.setId_usuario(prestamo_alta.this.cliente.getId_usuario());
 
-                     p.setFecha_ult_cobro("0001-01-01");
+                     if(!txt_fecha_inicio.getText().toString().isEmpty()){
+                         p.setFecha_ult_cobro(txt_fecha_inicio.getText().toString());
+                     }else{
+                         p.setFecha_ult_cobro("0001-01-01");
+                     }
                      p.setFecha_ult_pago("0001-01-01");
 
                      p.setMonto_financiado(Double.parseDouble(txt_monto_finaciado.getText().toString()));

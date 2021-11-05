@@ -165,6 +165,7 @@ public class listado_prestamo extends AppCompatActivity {
         ImageButton bt_eliminar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_eliminar);
         ImageButton bt_listar_amortiz = (ImageButton) v.findViewById(R.id.prestamo_view_bt_listar_amort);
         LinearLayout ln_listado_amor = (LinearLayout) v.findViewById(R.id.prestamo_view_amorizaciones);
+        LinearLayout ln_datos_cuotas = (LinearLayout) v.findViewById(R.id.prestamo_view_datos_cuotas);
 
         switch (p.getTipo()){
             case 0:
@@ -173,6 +174,7 @@ public class listado_prestamo extends AppCompatActivity {
             default:
                 txt_tipo.setText("CUOTAS");
                 bt_listar_amortiz.setVisibility(View.VISIBLE);
+                ln_datos_cuotas.setVisibility(View.VISIBLE);
                 break;
         }
 
@@ -295,12 +297,8 @@ public class listado_prestamo extends AppCompatActivity {
 
     private void set_listado_amortizaciones(Prestamo p,View v){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-      //  final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME2);
         final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME2).child(p.getId());
-       // final Query usuQuery = ref.child(p.getId()).orderByChild("id_prestamo").equalTo(p.getId());
-        //final Query usuQuery = ref.orderByChild("fecha_cuota");
         final Query usuQuery = ref.orderByChild("fecha_alta_unix");
-       // final Query usuQuery = ref.getParent().orderByValue();
         LinearLayout listado_amorizaciones = (LinearLayout) v.findViewById(R.id.prestamo_view_lista_amortizaciones);
 
         usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {

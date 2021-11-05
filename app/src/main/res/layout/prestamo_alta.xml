@@ -142,6 +142,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp">
+
+                <EditText
+                    android:id="@+id/prestamo_alta_fecha_incio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Fecha a iniciar"
+                    android:inputType="date"
+                    android:textAlignment="center"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
@@ -282,7 +304,6 @@
                     app:srcCompat="@android:drawable/ic_menu_revert" />
 
             </LinearLayout>
-
 
         </LinearLayout>
     </ScrollView>
