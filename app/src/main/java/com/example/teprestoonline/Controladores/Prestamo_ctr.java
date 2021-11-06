@@ -1,8 +1,12 @@
 package com.example.teprestoonline.Controladores;
 
+import android.widget.Toast;
+
 import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
+import com.example.teprestoonline.prestamo_alta;
+import com.example.teprestoonline.utilidades.Fecha_utiliti;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,4 +39,46 @@ public class Prestamo_ctr {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference(BBDD_NAME);
     }
+
+    public void set_proceso_amortizaciones(Prestamo p){
+        amortizacion_cuota amorizacion =null;
+        String fecha_prox_cobro=p.getFecha_ult_cobro();
+        String nueva_fecha="0001-01-01";
+
+        if (fecha_prox_cobro.equals("0001-01-01")) {
+            fecha_prox_cobro = new Fecha_utiliti().getFechaSystemaYYMMDD();
+        }else{
+            nueva_fecha = fecha_prox_cobro;
+        }
+
+        for(int cont=0;cont<p.getCantidad_cuotas();cont++){// hago un bucle por la cantidad de cuotas que se parametrizo el prestamo
+            amorizacion  = new amortizacion_cuota();
+            amorizacion.set_datos_unicos();
+            amorizacion.set_datos_ultima_modificaion();
+
+            if(!nueva_fecha.equals("0001-01-01") && cont==0) {
+             //   Toast.makeText(prestamo_alta.this.actividad,"FECHA ES "+nueva_fecha,Toast.LENGTH_LONG).show();
+            }else{
+                if(cont==0){
+                    nueva_fecha = new Fecha_utiliti().suma_dias3(
+                            ((cont + 1) * p.getPeriodo()), fecha_prox_cobro
+                    );
+                }else{
+                    nueva_fecha = new Fecha_utiliti().suma_dias3(
+                            ((cont ) * p.getPeriodo()), fecha_prox_cobro
+                    );
+                }
+            }
+
+            amorizacion.setId_prestamo(p.getId());
+            amorizacion.setFecha_cuota(nueva_fecha);
+            amorizacion.setEstado(3);
+            amorizacion.setCapital(p.getCapital_cuota());
+            amorizacion.setInteres(p.getInteres_cuota());
+            amorizacion.setCuota(p.getCuota());
+            amorizacion.setFecha_pago("0001-01-01");
+            set_prestamo_amortizaciones(amorizacion);
+        }
+    }
+
 }

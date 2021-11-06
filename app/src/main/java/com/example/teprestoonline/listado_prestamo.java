@@ -187,13 +187,13 @@ public class listado_prestamo extends AppCompatActivity {
                     txt_tasa.setEnabled(true);
                     txt_cantcuorest.setEnabled(true);
                     txt_cantcuototal.setEnabled(true);
-                    txt_cuota.setEnabled(true);
+                 //   txt_cuota.setEnabled(true);
                     txt_restante.setEnabled(true);
                     txt_fecultcob.setEnabled(true);
-                    txt_fecultpag.setEnabled(true);
+               //     txt_fecultpag.setEnabled(true);
                     selector_perido.setEnabled(true);
                 }else{
-                    //seteo los valores del formulario a la instancia del prestamo apra modificar
+                    //seteo los valores del formulario a la instancia del prestamo para modificar
                     p.setTasa(Integer.parseInt(txt_tasa.getText().toString()));
                     p.setRestante(Double.parseDouble(txt_restante.getText().toString()));
                     p.setMonto_financiado(Double.parseDouble(txt_montofin.getText().toString()));
@@ -213,18 +213,22 @@ public class listado_prestamo extends AppCompatActivity {
                     }
                     p.setFecha_ult_pago(txt_fecultpag.getText().toString());
                     p.setFecha_ult_cobro(txt_fecultcob.getText().toString());
+                    if(p.getTipo()==1){
+                        p.setCantida_cuotas_restantes(Integer.parseInt(txt_cantcuorest.getText().toString()));
+                        p.setCantidad_cuotas(Integer.parseInt(txt_cantcuototal.getText().toString()));
+                    }
 
                     set_mensage("esta seguro de realizar los cambios?",p,0);
                     txt_montofin.setEnabled(false);
                     txt_tasa.setEnabled(false);
                     txt_cantcuorest.setEnabled(false);
                     txt_cantcuototal.setEnabled(false);
-                    txt_cuota.setEnabled(false);
+                  //  txt_cuota.setEnabled(false);
                     txt_restante.setEnabled(false);
                     txt_fecultcob.setEnabled(false);
-                    txt_fecultpag.setEnabled(false);
+                  //  txt_fecultpag.setEnabled(false);
                     selector_perido.setEnabled(false);
-                    set_listar_pretamos_cliente(p.getId_cliente(),p.getId_usuario());
+
                 }
 
             }
@@ -253,6 +257,31 @@ public class listado_prestamo extends AppCompatActivity {
         return v;
     }
 
+    private void set_proceso_refinanciamiento(Prestamo p){
+        new Prestamo_ctr().set_eliminar(p);//elimino el prestamo anterior y refinancio
+        if(p.getTipo()==1){
+            p.setTipo(1); // tipo 1 = Cuotas
+
+            double monto = p.getMonto_financiado();
+            double tasa = Double.parseDouble(""+p.getTasa()) / 100 ;
+            int ganancia = Integer.parseInt(String.valueOf(Math.round((monto * tasa))));
+            double restante = monto + ganancia;
+            double cuota = restante  / p.getCantidad_cuotas();
+            double interes_cuota = (double) (ganancia) / p.getCantidad_cuotas();
+            double capital_cuota = (double) (monto) / p.getCantidad_cuotas();
+
+            p.setInteres_cuota(interes_cuota);
+            p.setCapital_cuota(capital_cuota);
+            p.setCuota(cuota);
+            p.setRestante(restante);
+        }
+        new Prestamo_ctr().set_prestamo(p);
+        if(p.getTipo()==1){
+            new Prestamo_ctr().set_proceso_amortizaciones(p);
+        }
+        set_listar_pretamos_cliente(p.getId_cliente(),p.getId_usuario());
+    }
+
     private void set_mensage(String mensaje,Prestamo p,int opcion){
         AlertDialog.Builder builder = new AlertDialog.Builder(listado_prestamo.this);
         builder.setTitle("Notificacion ");
@@ -260,7 +289,7 @@ public class listado_prestamo extends AppCompatActivity {
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(opcion==0) {// opcion 0 para modificar
-                    new Prestamo_ctr().set_prestamo(p);
+                    set_proceso_refinanciamiento(p);
                 }else{// de lo contrario elimino
                     new Prestamo_ctr().set_eliminar(p);
                 }

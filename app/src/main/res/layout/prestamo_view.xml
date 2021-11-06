@@ -32,23 +32,25 @@
 
                     <TextView
                         android:id="@+id/textView11"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="50"
                         android:text="Tipo"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/prestamo_view_tipo"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:inputType="textPersonName" />
+                        android:layout_weight="50"
+                        android:text="Periodo"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -57,11 +59,36 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <EditText
+                        android:id="@+id/prestamo_view_tipo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="textPersonName"
+                        android:textAlignment="center" />
+
+                    <Spinner
+                        android:id="@+id/prestamo_view_periodo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
                     <TextView
                         android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="40"
                         android:text="Fecha Alta"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -70,35 +97,15 @@
 
                     <EditText
                         android:id="@+id/prestamo_view_fecalta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:inputType="date" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="40"
-                        android:text="Periodo"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                    <Spinner
-                        android:id="@+id/prestamo_view_periodo"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="70" />
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="date"
+                        android:textAlignment="center" />
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -290,7 +297,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="fecha ultimo cobro"
+                            android:text="Fecha ultimo cobro"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textStyle="bold" />
 
@@ -315,7 +322,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="fecha ultimo pago"
+                            android:text="Fecha ultimo pago"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textStyle="bold" />
 
@@ -383,7 +390,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="AMORIZACIONES"
+                            android:text="AMORTIZACIONES"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textColor="@color/white" />
