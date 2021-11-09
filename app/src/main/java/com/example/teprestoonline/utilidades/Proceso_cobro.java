@@ -2,12 +2,21 @@ package com.example.teprestoonline.utilidades;
 
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Prestamo_ctr;
 
 import com.example.teprestoonline.Modelo.Prestamo;
+import com.example.teprestoonline.Modelo.amortizacion_cuota;
 import com.example.teprestoonline.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Proceso_cobro {
@@ -33,7 +42,7 @@ public class Proceso_cobro {
             dias_transcurridos = get_dias_trascurridos2(p.getFecha_alta_humana().substring(0,10));
         }
 
-        if (dias_transcurridos>0 && dias_transcurridos > p.getPeriodo()){
+        if (dias_transcurridos > 0 && dias_transcurridos >= p.getPeriodo()){
             TextView label = new TextView(this.applicationContext);
             TextView label2 = new TextView(this.applicationContext);
             TextView label3 = new TextView(this.applicationContext);
@@ -59,6 +68,7 @@ public class Proceso_cobro {
             controlador.set_prestamo(p);
 
             label.setText("Prestamo con fecha caducada .: "+ p.getId());
+            label.setText("Prestamo tipo .: " + p.getTipo());//0 regular 1 cuotas
             label2.setText("Fecha ult cobro .: "+ p.getFecha_ult_cobro());
             label3.setText("Fecha alta .: "+ p.getFecha_alta_humana().substring(0,10));
             label4.setText("Dias Trascurridos .: "+ dias_transcurridos + " deuda anterior .: " + anterior_deuda
@@ -70,6 +80,84 @@ public class Proceso_cobro {
             ln.addView(label3);
             ln.addView(label4);
         }
+
+    }
+
+    public void set_validaciones_prestamos_cuotas(Prestamo p) {
+        FirebaseDatabase database = null;
+        final DatabaseReference myRef;
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference(Prestamo_ctr.BBDD_NAME2).child(p.getId());
+        final Query usuQuery = myRef.orderByChild("fecha_alta_unix");
+
+        usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
+                        amortizacion_cuota amorizacion = hijo.getValue(amortizacion_cuota.class);
+                        int dias_transcurridos = 0;
+                        dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
+
+                        int dias_transcurridos2 = 0;
+                        if(!p.getFecha_ult_cobro().equals("0001-01-01")){
+                            dias_transcurridos2 = get_dias_trascurridos2(p.getFecha_ult_cobro());
+                        }else{
+                            dias_transcurridos2 = get_dias_trascurridos2(p.getFecha_alta_humana().substring(0,10));
+                        }//valido la fecha de ultimo cobro para solo tomar en cuanta los prestamos 1 sola vez por ejecucion
+
+                        if(dias_transcurridos == 0) {
+                            dias_transcurridos = p.getPeriodo();
+                        }//si dias_transcurridos = 0 es que la fecha de la cuota a caido por lo que la igualo al periodo
+
+                        if(dias_transcurridos >= p.getPeriodo() && amorizacion.getEstado() != 2 && dias_transcurridos2 > 0) {
+                            if(dias_transcurridos == p.getPeriodo() ){
+                                amorizacion.setEstado(0);//cuota caida
+                            }else if(dias_transcurridos > p.getPeriodo()){
+                                amorizacion.setEstado(1);//cuota no pagada
+                            }
+
+                            TextView label = new TextView(applicationContext);
+                            TextView label2 = new TextView(applicationContext);
+                            TextView label3 = new TextView(applicationContext);
+                            TextView label4 = new TextView(applicationContext);
+                            TextView label5 = new TextView(applicationContext);
+                            label.setPadding(5, 5, 5, 5);
+                            label2.setPadding(5, 5, 5, 5);
+                            label3.setPadding(5, 5, 5, 5);
+                            label4.setPadding(5, 5, 5, 5);
+                            label5.setPadding(5, 5, 5, 5);
+
+                            label.setText("Prestamo cuotas con fecha caducada .: " + p.getId());
+                            label5.setText("Prestamo tipo .: " + p.getTipo());//0 regular 1 cuotas
+                            label3.setText("Fecha alta .: " + p.getFecha_alta_humana().substring(0, 10));
+                            label2.setText("Caducada .: " + amorizacion.getFecha_cuota());
+                            label4.setText("Dias Trascurridos .: " + dias_transcurridos);
+
+                            ln.addView(label);
+                            ln.addView(label2);
+                            ln.addView(label3);
+                            ln.addView(label4);
+                            ln.addView(label5);
+
+                            p.set_datos_ultima_modificaion(applicationContext);
+                            p.setFecha_ult_cobro(new Fecha_utiliti().getFechaSystemaYYMMDD());
+                            controlador.set_prestamo_amortizaciones(amorizacion); //actualizo el estado de la cuota
+                            controlador.set_prestamo(p);
+                        }
+
+                    }
+                }else{
+                    Toast.makeText(applicationContext,"No se encontraron datos",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -107,22 +195,11 @@ public class Proceso_cobro {
 
     }
 
-    public int get_dias_trascurridos(Prestamo p,String fecha_ult_pago){
-        int dias = 0;
-        dias =
-                new Fecha_utiliti().getTiempo_Transcurido_DIAS_YYYYMMDD(
-                        p.getFecha_alta_humana().substring(0,10) ,
-                        new Fecha_utiliti().getFechaSystemaYYMMDD() ) ;
-
-        return dias;
-    }
 
     public int get_dias_trascurridos2(String fecha){
         int dias = 0;
-        dias =
-                new Fecha_utiliti().getTiempo_Transcurido_DIAS_YYYYMMDD(
-                        fecha ,
-                        new Fecha_utiliti().getFechaSystemaYYMMDD() ) ;
+        dias = new Fecha_utiliti().getTiempo_Transcurido_DIAS_YYYYMMDD(
+                fecha , new Fecha_utiliti().getFechaSystemaYYMMDD() ) ;
 
         return dias;
     }

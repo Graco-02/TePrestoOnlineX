@@ -151,6 +151,9 @@ public class amortizacion_cuota {
             case 1:
                 setEstado_descripcion("NO PAGADA");
                 break;
+            case 2:
+                setEstado_descripcion("PAGADA");
+                break;
             default:
                 setEstado_descripcion("PENDIENTE");
                 break;

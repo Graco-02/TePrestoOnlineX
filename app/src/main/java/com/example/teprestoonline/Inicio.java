@@ -163,6 +163,7 @@ public class Inicio extends AppCompatActivity {
                                 procesamiento.set_validaciones_prestamos_regulares(p);
                                 break;
                             case 1:
+                                procesamiento.set_validaciones_prestamos_cuotas(p);
                                 break;
                         }
                     }

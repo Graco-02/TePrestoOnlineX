@@ -74,7 +74,7 @@ public class Fecha_utiliti  extends Date{
         int year_t = (year2 - year);
         int mest = 0;
 
-        if (mes == 12 && mes2 < mes){
+        if (mes == 12 && mes2 < mes && year_t > 0){
             mest = mes2;
         }else{
             mest = mes2 - mes;
@@ -86,10 +86,12 @@ public class Fecha_utiliti  extends Date{
         //02 - 01 = 1 * 30 = 30
         //1 - 31 = 30
         System.out.println("EVALUANDO FECHAS" );
-        System.out.println("EVALUANDO FECHAS " + " FECHA 1 = " + fecha + " FECHA 2" + fecha2);
-        System.out.println(dia + " -- " +  dia2);
+        System.out.println("EVALUANDO FECHAS " + " FECHA 1 = " + fecha + " FECHA 2 " + fecha2);
+        System.out.println(dia + " -- " +  dia2 + " -- " +  dia_t);
+
+        /*
         if(dia == get_dias_mes(mes,year)){
-            mest  =0 ;
+            mest  = 0 ;
             if(dia2 < dia){
                 dia_t = dia2;
             }else  if(dia2 == dia){
@@ -97,10 +99,12 @@ public class Fecha_utiliti  extends Date{
             }else{
                 dia_t =  dia2 - dia;
             }
-        }
+        }*/
 
         int resultado = ( ( (year_t * 12) + mest ) * 30) + dia_t;
-
+        System.out.println(" calculo y = " +  year_t + " m " + mest + " d " +  dia_t);
+        System.out.println(" calculo2 " +   ( ( (year_t * 12) + mest ) * 30)  + " , "  +  dia_t);
+        System.out.println(" resultado " +  resultado);
         return resultado;
     }
 
