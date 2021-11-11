@@ -376,7 +376,8 @@ public class listado_prestamo extends AppCompatActivity {
                                         label.setText(amortz.getEstado_descripcion());
                                         break;
                                     case 3:
-                                        label.setText(""+amortz.getCuota());
+                                        double cuota_atrazada = amortz.getCapital()+amortz.getInteres();
+                                        label.setText(""+cuota_atrazada);
                                         break;
                                 }
 

@@ -110,13 +110,18 @@ public class Proceso_cobro {
                         if(fecha_dia_num >= fecha_cuota_num && amorizacion.getEstado() != 2 && dias_transcurridos_act > 0) {
                                 if (fecha_dia_num == fecha_cuota_num ) {
                                     nuevo_estado=0;//cuota caida
-                                } else if (fecha_dia_num > fecha_cuota_num ) {
+                                } else if (fecha_dia_num > fecha_cuota_num) {
                                     nuevo_estado=1;//cuota no pagada
                                     //proceso para generar interes sobre la cuota atrazada estos son de cobro opcional
                                     //por lo que se procede a solo actualizar el campo interes de la cuota
                                     //al momento del pago se presentara el monto en atrazo por igual al listar las amortizaciones
                                     int dias_transcurridos = 0;
                                     dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
+
+                                    //si han pasado menos dias desde la ultima actualizacion que la fecha de la cuota es que ya se ha actualizado
+                                    if(dias_transcurridos_act<dias_transcurridos){
+                                        dias_transcurridos = dias_transcurridos_act;
+                                    }
 
                                     double nuevo_interes = 0;
                                     nuevo_interes = set_proceso_cuota_en_atrazo(amorizacion.getInteres(),
