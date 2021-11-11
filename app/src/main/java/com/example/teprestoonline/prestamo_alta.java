@@ -227,10 +227,11 @@ public class prestamo_alta {
             double cuota = restante  / p.getCantidad_cuotas();
             double interes_cuota = (double) (ganancia) / p.getCantidad_cuotas();
             double capital_cuota = (double) (monto) / p.getCantidad_cuotas();
+            double cuotare_dondeada = (int) Math.round(cuota);
 
             p.setInteres_cuota(interes_cuota);
             p.setCapital_cuota(capital_cuota);
-            p.setCuota(cuota);
+            p.setCuota(cuotare_dondeada);
             p.setRestante(restante);
         }
 

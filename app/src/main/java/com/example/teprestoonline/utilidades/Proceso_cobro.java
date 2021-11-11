@@ -96,54 +96,49 @@ public class Proceso_cobro {
                 if(dataSnapshot.exists()) {
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         amortizacion_cuota amorizacion = hijo.getValue(amortizacion_cuota.class);
+
                         int dias_transcurridos = 0;
                         dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
 
-                        int dias_transcurridos2 = 0;
-                        if(!p.getFecha_ult_cobro().equals("0001-01-01")){
-                            dias_transcurridos2 = get_dias_trascurridos2(p.getFecha_ult_cobro());
-                        }else{
-                            dias_transcurridos2 = get_dias_trascurridos2(p.getFecha_alta_humana().substring(0,10));
-                        }//valido la fecha de ultimo cobro para solo tomar en cuanta los prestamos 1 sola vez por ejecucion
+                        int nuevo_estado=0;
 
-                        if(dias_transcurridos == 0) {
-                            dias_transcurridos = p.getPeriodo();
-                        }//si dias_transcurridos = 0 es que la fecha de la cuota a caido por lo que la igualo al periodo
+                        if(dias_transcurridos >= p.getPeriodo() && amorizacion.getEstado() != 2 || dias_transcurridos == 0) {
+                                if (dias_transcurridos == 0) {
+                                    nuevo_estado=0;//cuota caida
+                                } else if (dias_transcurridos >= p.getPeriodo()) {
+                                    nuevo_estado=1;//cuota no pagada
+                                }
 
-                        if(dias_transcurridos >= p.getPeriodo() && amorizacion.getEstado() != 2 && dias_transcurridos2 > 0) {
-                            if(dias_transcurridos == p.getPeriodo() ){
-                                amorizacion.setEstado(0);//cuota caida
-                            }else if(dias_transcurridos > p.getPeriodo()){
-                                amorizacion.setEstado(1);//cuota no pagada
+                            if(nuevo_estado != amorizacion.getEstado()) {
+                                amorizacion.setEstado(nuevo_estado);
+
+                                TextView label = new TextView(applicationContext);
+                                TextView label2 = new TextView(applicationContext);
+                                TextView label3 = new TextView(applicationContext);
+                                TextView label4 = new TextView(applicationContext);
+                                TextView label5 = new TextView(applicationContext);
+                                label.setPadding(5, 5, 5, 5);
+                                label2.setPadding(5, 5, 5, 5);
+                                label3.setPadding(5, 5, 5, 5);
+                                label4.setPadding(5, 5, 5, 5);
+                                label5.setPadding(5, 5, 5, 5);
+
+                                label.setText("Prestamo cuotas con fecha caducada .: " + p.getId());
+                                label5.setText("Prestamo tipo .: " + p.getTipo());//0 regular 1 cuotas
+                                label3.setText("Fecha alta .: " + p.getFecha_alta_humana().substring(0, 10));
+                                label2.setText("Caducada .: " + amorizacion.getFecha_cuota());
+                                label4.setText("Dias Trascurridos .: " + dias_transcurridos);
+
+                                ln.addView(label);
+                                ln.addView(label2);
+                                ln.addView(label3);
+                                ln.addView(label4);
+                                ln.addView(label5);
                             }
 
-                            TextView label = new TextView(applicationContext);
-                            TextView label2 = new TextView(applicationContext);
-                            TextView label3 = new TextView(applicationContext);
-                            TextView label4 = new TextView(applicationContext);
-                            TextView label5 = new TextView(applicationContext);
-                            label.setPadding(5, 5, 5, 5);
-                            label2.setPadding(5, 5, 5, 5);
-                            label3.setPadding(5, 5, 5, 5);
-                            label4.setPadding(5, 5, 5, 5);
-                            label5.setPadding(5, 5, 5, 5);
-
-                            label.setText("Prestamo cuotas con fecha caducada .: " + p.getId());
-                            label5.setText("Prestamo tipo .: " + p.getTipo());//0 regular 1 cuotas
-                            label3.setText("Fecha alta .: " + p.getFecha_alta_humana().substring(0, 10));
-                            label2.setText("Caducada .: " + amorizacion.getFecha_cuota());
-                            label4.setText("Dias Trascurridos .: " + dias_transcurridos);
-
-                            ln.addView(label);
-                            ln.addView(label2);
-                            ln.addView(label3);
-                            ln.addView(label4);
-                            ln.addView(label5);
-
-                            p.set_datos_ultima_modificaion(applicationContext);
-                            p.setFecha_ult_cobro(new Fecha_utiliti().getFechaSystemaYYMMDD());
                             controlador.set_prestamo_amortizaciones(amorizacion); //actualizo el estado de la cuota
-                            controlador.set_prestamo(p);
+                        }else{
+                            controlador.set_prestamo_amortizaciones(amorizacion); //actualizo el estado de la cuota
                         }
 
                     }

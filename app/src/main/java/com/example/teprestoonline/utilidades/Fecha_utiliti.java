@@ -198,6 +198,48 @@ public class Fecha_utiliti  extends Date{
         return String.valueOf(year2) + "-" + String.valueOf(mes2) + "-" + String.valueOf(dia2) ;
     }
 
+    public String get_fecha_quincena(String fecha){
+        String[] fechaComoArray = fecha.split("-");
+
+        int year = Integer.parseInt(fechaComoArray[0]);
+        int mes = Integer.parseInt(fechaComoArray[1]);
+        int dia = Integer.parseInt(fechaComoArray[2]);
+
+        if(dia<=15){
+            dia = 15;
+        }else if(dia>=15 && dia <= get_dias_mes(mes,year)){
+           dia = get_dias_mes(mes,year);
+        }else if(dia >= get_dias_mes(mes,year) ){
+            dia = 15;
+            if(mes==12){
+                year+=1;
+                mes = 1;
+            }else{
+                mes+=1;
+            }
+        }
+
+        return String.valueOf(year) + "-" + String.valueOf(mes) + "-" + String.valueOf(dia) ;
+    }
+
+    public String get_fecha_mensual(String fecha){
+        String[] fechaComoArray = fecha.split("-");
+
+        int year = Integer.parseInt(fechaComoArray[0]);
+        int mes = Integer.parseInt(fechaComoArray[1]);
+        int dia = Integer.parseInt(fechaComoArray[2]);
+
+        if(mes==12){
+                year+=1;
+                mes = 1;
+                dia = get_dias_mes(mes,year);
+        }else{
+                mes+=1;
+                dia = get_dias_mes(mes,year);
+        }
+
+        return String.valueOf(year) + "-" + String.valueOf(mes) + "-" + String.valueOf(dia) ;
+    }
 
     public int getDia()
     {

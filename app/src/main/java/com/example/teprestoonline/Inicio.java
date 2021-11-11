@@ -38,6 +38,7 @@ import java.util.ArrayList;
 public class Inicio extends AppCompatActivity {
 
     private Usuario usu;
+    public static boolean procesado=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,9 +126,14 @@ public class Inicio extends AppCompatActivity {
         LinearLayout ln = (LinearLayout) findViewById(R.id.inicio_proceso_view);
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                ln.setVisibility(View.VISIBLE);
-                set_proceso_cobro();
-                dialog.dismiss();
+               if(procesado==false){
+                   ln.setVisibility(View.VISIBLE);
+                   set_proceso_cobro();
+                   dialog.dismiss();
+                   procesado=true;
+               }else{
+                   Toast.makeText(Inicio.this,"El proceso ya habia sido lanzado",Toast.LENGTH_LONG).show();
+               }
             }
         });
 
@@ -135,6 +141,7 @@ public class Inicio extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 ln.setVisibility(View.GONE);
                 dialog.dismiss();
+                procesado=false;
             }
         });
 
