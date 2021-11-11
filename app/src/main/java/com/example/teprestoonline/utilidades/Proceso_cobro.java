@@ -24,6 +24,8 @@ public class Proceso_cobro {
     private static final double CT_100 = 100.00;
     private LinearLayout ln = null;
     private Prestamo_ctr controlador;
+    final Fecha_utiliti gestor_fechas = new Fecha_utiliti();
+    final String fecha_dia = gestor_fechas.getFechaSystemaYYMMDD();
 
     public Proceso_cobro(AppCompatActivity applicationContext) {
         this.applicationContext = applicationContext;
@@ -90,22 +92,21 @@ public class Proceso_cobro {
         myRef = database.getReference(Prestamo_ctr.BBDD_NAME2).child(p.getId());
         final Query usuQuery = myRef.orderByChild("fecha_alta_unix");
 
+
         usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         amortizacion_cuota amorizacion = hijo.getValue(amortizacion_cuota.class);
+                        double fecha_dia_num = gestor_fechas.get_fecha_numerica(fecha_dia);
+                        double fecha_cuota_num = gestor_fechas.get_fecha_numerica(amorizacion.getFecha_cuota());
+                        int nuevo_estado = 0;
 
-                        int dias_transcurridos = 0;
-                        dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
-
-                        int nuevo_estado=0;
-
-                        if(dias_transcurridos >= p.getPeriodo() && amorizacion.getEstado() != 2 || dias_transcurridos == 0) {
-                                if (dias_transcurridos == 0) {
+                        if(fecha_dia_num >= fecha_cuota_num && amorizacion.getEstado() != 2 ) {
+                                if (fecha_dia_num == fecha_cuota_num ) {
                                     nuevo_estado=0;//cuota caida
-                                } else if (dias_transcurridos >= p.getPeriodo()) {
+                                } else if (fecha_dia_num > fecha_cuota_num ) {
                                     nuevo_estado=1;//cuota no pagada
                                 }
 
@@ -127,7 +128,7 @@ public class Proceso_cobro {
                                 label5.setText("Prestamo tipo .: " + p.getTipo());//0 regular 1 cuotas
                                 label3.setText("Fecha alta .: " + p.getFecha_alta_humana().substring(0, 10));
                                 label2.setText("Caducada .: " + amorizacion.getFecha_cuota());
-                                label4.setText("Dias Trascurridos .: " + dias_transcurridos);
+                                label4.setText("Dias Trascurridos .: " + (fecha_dia_num - fecha_cuota_num));
 
                                 ln.addView(label);
                                 ln.addView(label2);
