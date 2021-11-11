@@ -65,7 +65,7 @@ public class Proceso_cobro {
             }
 
             p.setFecha_ult_cobro(fecha_proceso);
-            p.set_datos_ultima_modificaion(this.applicationContext);
+            p.set_datos_ultima_modificaion();
             //actualizo el prestamo con el nuevo saldo y la fecha de ultimo cobro a la de la ejecucion
             controlador.set_prestamo(p);
 

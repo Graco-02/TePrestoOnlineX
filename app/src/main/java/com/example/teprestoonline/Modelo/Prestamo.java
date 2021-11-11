@@ -16,6 +16,7 @@ public class Prestamo extends Prestamo_cuota{
     private String id_cliente;
     private String id_usuario;
 
+    private String id_prestamo;
     private double monto_financiado;
     private int tasa;
     private double restante;
@@ -24,6 +25,14 @@ public class Prestamo extends Prestamo_cuota{
     private int periodo;
     private int tipo;
 
+
+    public String getId_prestamo() {
+        return id_prestamo;
+    }
+
+    public void setId_prestamo(String id_prestamo) {
+        this.id_prestamo = id_prestamo;
+    }
 
     public int getTipo() {
         return tipo;
@@ -137,7 +146,7 @@ public class Prestamo extends Prestamo_cuota{
         this.fecha_modificacion_unix = fecha_modificacion_unix;
     }
 
-    public void set_datos_unicos(Context contesto){
+    public void set_datos_unicos(){
         setId(UUID.randomUUID().toString());
         Calendar calendario =  Calendar.getInstance();
         setFecha_alta_unix((calendario.getTimeInMillis() * -1));
@@ -150,7 +159,7 @@ public class Prestamo extends Prestamo_cuota{
         setId_usuario(Usuario.usuario_logueado.getId());
     }
 
-    public void set_datos_ultima_modificaion(Context contesto){
+    public void set_datos_ultima_modificaion(){
         Calendar calendario =  Calendar.getInstance();
         setFecha_modificacion_unix((calendario.getTimeInMillis() * -1));
 

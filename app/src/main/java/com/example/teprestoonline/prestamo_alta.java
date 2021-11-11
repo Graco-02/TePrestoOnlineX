@@ -109,7 +109,7 @@ public class prestamo_alta {
              public void onClick(View view) {
                  if(get_validar()) {
                      Prestamo p = new Prestamo();
-                     p.set_datos_unicos(prestamo_alta.this.actividad);
+                     p.set_datos_unicos();
                      p.setId_cliente(prestamo_alta.this.cliente.getId());
                      p.setId_usuario(prestamo_alta.this.cliente.getId_usuario());
                      set_procesamiento_prestamo_alta(p);

@@ -354,6 +354,13 @@
                         app:srcCompat="@android:drawable/ic_menu_edit" />
 
                     <ImageButton
+                        android:id="@+id/prestamo_view_bt_pagar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/pago1b" />
+
+                    <ImageButton
                         android:id="@+id/prestamo_view_bt_eliminar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

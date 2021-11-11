@@ -77,6 +77,7 @@ public class listado_prestamo extends AppCompatActivity {
                         }
                     }
                 }else{
+                    listado.removeAllViews(); //limpio el conrtenedor
                     Toast.makeText(listado_prestamo.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
                 }
             }
@@ -105,6 +106,7 @@ public class listado_prestamo extends AppCompatActivity {
                         }
                     }
                 }else{
+                    listado.removeAllViews(); //limpio el conrtenedor
                     Toast.makeText(listado_prestamo.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
                 }
             }
@@ -162,8 +164,10 @@ public class listado_prestamo extends AppCompatActivity {
 
 
         ImageButton bt_modificar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_modficar);
+        ImageButton bt_pagar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_pagar);
         ImageButton bt_eliminar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_eliminar);
         ImageButton bt_listar_amortiz = (ImageButton) v.findViewById(R.id.prestamo_view_bt_listar_amort);
+
         LinearLayout ln_listado_amor = (LinearLayout) v.findViewById(R.id.prestamo_view_amorizaciones);
         LinearLayout ln_datos_cuotas = (LinearLayout) v.findViewById(R.id.prestamo_view_datos_cuotas);
 
@@ -254,6 +258,13 @@ public class listado_prestamo extends AppCompatActivity {
             }
         });
 
+        bt_pagar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                set_mensage("Desea realizar el pago?",p,9);
+            }
+        });
+
         return v;
     }
 
@@ -290,9 +301,19 @@ public class listado_prestamo extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 if(opcion==0) {// opcion 0 para modificar
                     set_proceso_refinanciamiento(p);
-                }else{// de lo contrario elimino
+                }else if(opcion==1) {// lo elimino
                     new Prestamo_ctr().set_eliminar(p);
+                }else if(opcion==9) {// Mando el pago
+                    Intent lanzadera = new Intent(listado_prestamo.this,Pago.class);
+                    lanzadera.putExtra("id_prestamo",p.getId());//no de prestamo a realizar el pago
+                    lanzadera.putExtra("id_usuario",p.getId_usuario());//no de prestamo a realizar el pago
+                    lanzadera.putExtra("id_cliente",p.getId_cliente());//no de prestamo a realizar el pago
+                    lanzadera.putExtra("tipo",p.getTipo());
+                    lanzadera.putExtra("monto_restante",p.getRestante());
+                    lanzadera.putExtra("fec_ult_pago",p.getFecha_ult_pago());
+                    startActivity(lanzadera);
                 }
+
                 Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
@@ -340,7 +361,7 @@ public class listado_prestamo extends AppCompatActivity {
                     tabla.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                    String[] titulos = {"FECHA VENCE","FECHA PAGO","ESTADO","CUOTA"};
+                    String[] titulos = {"FECHA VENCE","FECHA PAGO","ESTADO","CUOTA","ATRAZO"};
 
                     TableRow ln_emcabezados = new TableRow(v.getContext());
                     ln_emcabezados.setBackgroundColor(Color.GREEN);
@@ -376,8 +397,13 @@ public class listado_prestamo extends AppCompatActivity {
                                         label.setText(amortz.getEstado_descripcion());
                                         break;
                                     case 3:
-                                        double cuota_atrazada = amortz.getCapital()+amortz.getInteres();
-                                        label.setText(""+cuota_atrazada);
+                                        label.setText(""+amortz.getCuota());
+                                        break;
+                                    case 4:
+                                        double atrazo = Math.abs(Math.round(
+                                                amortz.getCuota() - (amortz.getCapital()+amortz.getInteres())
+                                                ));
+                                        label.setText(""+atrazo);
                                         break;
                                 }
 

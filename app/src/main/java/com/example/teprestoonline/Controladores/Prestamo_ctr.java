@@ -1,11 +1,21 @@
 package com.example.teprestoonline.Controladores;
 
 
+import android.widget.Toast;
+
+import com.example.teprestoonline.Modelo.Pago;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
+import com.example.teprestoonline.listado_prestamo;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import androidx.annotation.NonNull;
 
 public class Prestamo_ctr {
 
@@ -13,6 +23,7 @@ public class Prestamo_ctr {
     private DatabaseReference myRef;
     public static final String BBDD_NAME = "prestamos";
     public static final String BBDD_NAME2 = "amortizaciones";
+    public static final String BBDD_NAME3 = "pagos";
 
     public void set_prestamo(Prestamo p){
         myRef.child(p.getId()).setValue(p);
@@ -37,6 +48,14 @@ public class Prestamo_ctr {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference(BBDD_NAME);
     }
+
+
+    public void set_pago(Pago mipago){
+        myRef = database.getReference(BBDD_NAME3);
+        myRef.child(mipago.getId_prestamo()).child(mipago.getId()).setValue(mipago);
+        set_actualizar_prestamo(mipago.getId_prestamo(),mipago.getFecha_pago(),mipago.getMonto_pagado());
+    }
+
 
     public void set_proceso_amortizaciones(Prestamo p){
         amortizacion_cuota amorizacion =null;
@@ -80,6 +99,36 @@ public class Prestamo_ctr {
             amorizacion.setFecha_pago("0001-01-01");
             set_prestamo_amortizaciones(amorizacion);
         }
+    }
+
+    public void set_actualizar_prestamo(String id,String fecha,double monto){
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME);
+        final Query usuQuery = ref.orderByChild("id").equalTo(id);
+
+        usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
+                        if(hijo.getValue(Prestamo.class).getId().equalsIgnoreCase(id)) {
+                            Prestamo p = hijo.getValue(Prestamo.class);
+                            p.set_datos_ultima_modificaion();
+                            p.setFecha_ult_pago(fecha);
+                            p.setRestante(p.getRestante() - monto);
+                            set_prestamo(p);
+                        }
+                    }
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
