@@ -102,16 +102,31 @@ public class Proceso_cobro {
                         double fecha_dia_num = gestor_fechas.get_fecha_numerica(fecha_dia);
                         double fecha_cuota_num = gestor_fechas.get_fecha_numerica(amorizacion.getFecha_cuota());
                         int nuevo_estado = 0;
+                        int dias_transcurridos_act = 0;
+                        dias_transcurridos_act = get_dias_trascurridos2(
+                                amorizacion.getFecha_modificacion_humana().substring(0,10)
+                        );
 
-                        if(fecha_dia_num >= fecha_cuota_num && amorizacion.getEstado() != 2 ) {
+                        if(fecha_dia_num >= fecha_cuota_num && amorizacion.getEstado() != 2 && dias_transcurridos_act > 0) {
                                 if (fecha_dia_num == fecha_cuota_num ) {
                                     nuevo_estado=0;//cuota caida
                                 } else if (fecha_dia_num > fecha_cuota_num ) {
                                     nuevo_estado=1;//cuota no pagada
+                                    //proceso para generar interes sobre la cuota atrazada estos son de cobro opcional
+                                    //por lo que se procede a solo actualizar el campo interes de la cuota
+                                    //al momento del pago se presentara el monto en atrazo por igual al listar las amortizaciones
+                                    int dias_transcurridos = 0;
+                                    dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
+
+                                    double nuevo_interes = 0;
+                                    nuevo_interes = set_proceso_cuota_en_atrazo(amorizacion.getInteres(),
+                                            amorizacion.getCapital(),p,dias_transcurridos);
+                                    amorizacion.setInteres(nuevo_interes);
                                 }
 
                             if(nuevo_estado != amorizacion.getEstado()) {
                                 amorizacion.setEstado(nuevo_estado);
+                                amorizacion.set_datos_ultima_modificaion();
 
                                 TextView label = new TextView(applicationContext);
                                 TextView label2 = new TextView(applicationContext);
@@ -178,14 +193,14 @@ public class Proceso_cobro {
 
     }
 
-    public double get_interes_cuota(Prestamo prestamo){
+    private double get_interes_cuota(Prestamo prestamo,double monto){
 
         double periodo = prestamo.getPeriodo();
 
         double tasa = (prestamo.getTasa()/ CT_100);
         double tasa_periodificada = (  tasa / periodo);
 
-        double interes = prestamo.getCuota() * tasa_periodificada;
+        double interes = monto * tasa_periodificada;
         return interes;
 
 
@@ -198,5 +213,20 @@ public class Proceso_cobro {
                 fecha , new Fecha_utiliti().getFechaSystemaYYMMDD() ) ;
 
         return dias;
+    }
+
+
+    protected double set_proceso_cuota_en_atrazo(double monto_capital,double monto_interes,Prestamo p,int dias_atrazo){
+        double cuota = monto_capital + monto_interes;
+        double nuevo_interes = 0;
+
+        for (int i=0;i<dias_atrazo;i++){
+            nuevo_interes = get_interes_cuota(p,cuota);
+            cuota = cuota + nuevo_interes;
+        }
+
+        nuevo_interes = get_interes_cuota(p,cuota);
+
+        return nuevo_interes;
     }
 }
