@@ -53,7 +53,6 @@ public class Prestamo_ctr {
     public void set_pago(Pago mipago){
         myRef = database.getReference(BBDD_NAME3);
         myRef.child(mipago.getId_prestamo()).child(mipago.getId()).setValue(mipago);
-        set_actualizar_prestamo(mipago.getId_prestamo(),mipago.getFecha_pago(),mipago.getMonto_pagado());
     }
 
 
@@ -99,36 +98,6 @@ public class Prestamo_ctr {
             amorizacion.setFecha_pago("0001-01-01");
             set_prestamo_amortizaciones(amorizacion);
         }
-    }
-
-    public void set_actualizar_prestamo(String id,String fecha,double monto){
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME);
-        final Query usuQuery = ref.orderByChild("id").equalTo(id);
-
-        usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
-                        if(hijo.getValue(Prestamo.class).getId().equalsIgnoreCase(id)) {
-                            Prestamo p = hijo.getValue(Prestamo.class);
-                            p.set_datos_ultima_modificaion();
-                            p.setFecha_ult_pago(fecha);
-                            p.setRestante(p.getRestante() - monto);
-                            set_prestamo(p);
-                        }
-                    }
-                }else{
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
 }

@@ -2,12 +2,14 @@ package com.example.teprestoonline.Modelo;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class Prestamo_cuota {
+@SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
+public class Prestamo_cuota implements Serializable {
 
     private int cantidad_cuotas;
     private int cantida_cuotas_restantes;

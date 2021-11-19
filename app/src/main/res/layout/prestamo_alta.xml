@@ -227,8 +227,32 @@
                     android:ems="10"
                     android:enabled="false"
                     android:hint="Cuota"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textAlignment="center" />
+
             </LinearLayout>
+
+            <EditText
+                android:id="@+id/prestamo_alta_porct_atrazo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:enabled="false"
+                android:hint="porcentage por atrazo"
+                android:inputType="textPersonName"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/prestamo_alta_mnt_fijo_atraz"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:enabled="false"
+                android:hint="monto fijo por atrazo"
+                android:inputType="textPersonName"
+                android:textAlignment="center" />
 
             <LinearLayout
                 android:layout_width="match_parent"

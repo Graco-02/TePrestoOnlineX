@@ -2,11 +2,13 @@ package com.example.teprestoonline.Modelo;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class Prestamo extends Prestamo_cuota{
+@SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
+public class Prestamo extends Prestamo_cuota implements Serializable {
 
     private String id;
     private String fecha_alta_humana;
@@ -16,7 +18,6 @@ public class Prestamo extends Prestamo_cuota{
     private String id_cliente;
     private String id_usuario;
 
-    private String id_prestamo;
     private double monto_financiado;
     private int tasa;
     private double restante;
@@ -24,15 +25,9 @@ public class Prestamo extends Prestamo_cuota{
     private String fecha_ult_pago;
     private int periodo;
     private int tipo;
+    private int porcentage_atrazo;
+    private int monto_fijo;
 
-
-    public String getId_prestamo() {
-        return id_prestamo;
-    }
-
-    public void setId_prestamo(String id_prestamo) {
-        this.id_prestamo = id_prestamo;
-    }
 
     public int getTipo() {
         return tipo;
@@ -144,6 +139,22 @@ public class Prestamo extends Prestamo_cuota{
 
     public void setFecha_modificacion_unix(long fecha_modificacion_unix) {
         this.fecha_modificacion_unix = fecha_modificacion_unix;
+    }
+
+    public int getPorcentage_atrazo() {
+        return porcentage_atrazo;
+    }
+
+    public void setPorcentage_atrazo(int porcentage_atrazo) {
+        this.porcentage_atrazo = porcentage_atrazo;
+    }
+
+    public int getMonto_fijo() {
+        return monto_fijo;
+    }
+
+    public void setMonto_fijo(int monto_fijo) {
+        this.monto_fijo = monto_fijo;
     }
 
     public void set_datos_unicos(){

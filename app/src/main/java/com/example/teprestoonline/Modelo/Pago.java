@@ -12,6 +12,7 @@ public class Pago {
     private long fecha_alta_unix;
     private String fecha_modificacion_humana;
     private long fecha_modificacion_unix;
+
     private String id_cliente;
     private String id_usuario;
 
@@ -119,7 +120,7 @@ public class Pago {
         this.tipo = tipo;
     }
 
-    public void set_datos_unicos(Context contesto){
+    public void set_datos_unicos(){
         setId(UUID.randomUUID().toString());
         Calendar calendario =  Calendar.getInstance();
         setFecha_alta_unix((calendario.getTimeInMillis() * -1));
@@ -132,7 +133,7 @@ public class Pago {
         setId_usuario(Usuario.usuario_logueado.getId());
     }
 
-    public void set_datos_ultima_modificaion(Context contesto){
+    public void set_datos_ultima_modificaion(){
         Calendar calendario =  Calendar.getInstance();
         setFecha_modificacion_unix((calendario.getTimeInMillis() * -1));
 

@@ -133,6 +133,9 @@ public class listado_prestamo extends AppCompatActivity {
         EditText txt_restante = (EditText) v.findViewById(R.id.prestamo_view_restante);
         EditText txt_fecultcob = (EditText) v.findViewById(R.id.prestamo_view_fecultcobro);
         EditText txt_fecultpag = (EditText) v.findViewById(R.id.prestamo_view_fecultpago);
+        EditText txt_por_atrz = (EditText) v.findViewById(R.id.prestamo_view_porct_atrazo);
+        EditText txt_mont_atrz = (EditText) v.findViewById(R.id.prestamo_view_mnt_fijo_atraz);
+
         Spinner selector_perido = (Spinner) v.findViewById(R.id.prestamo_view_periodo);
         selector_perido.setAdapter(proceso_spiner());
         selector_perido.setEnabled(false);
@@ -157,10 +160,12 @@ public class listado_prestamo extends AppCompatActivity {
         txt_tasa.setText(""+p.getTasa());
         txt_cantcuorest.setText(""+p.getCantida_cuotas_restantes());
         txt_cantcuototal.setText(""+p.getCantidad_cuotas());
-        txt_cuota.setText(""+p.getCuota());
+        txt_cuota.setText(""+Math.round(p.getCuota()));
         txt_restante.setText(""+p.getRestante());
         txt_fecultcob.setText(""+p.getFecha_ult_cobro());
         txt_fecultpag.setText(""+p.getFecha_ult_pago());
+        txt_mont_atrz.setText(""+p.getMonto_fijo());
+        txt_por_atrz.setText(""+p.getPorcentage_atrazo());
 
 
         ImageButton bt_modificar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_modficar);
@@ -185,17 +190,16 @@ public class listado_prestamo extends AppCompatActivity {
         bt_modificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             //   contenedor.setVisibility(View.VISIBLE);
                 if(!txt_montofin.isEnabled()) {
                     txt_montofin.setEnabled(true);
                     txt_tasa.setEnabled(true);
                     txt_cantcuorest.setEnabled(true);
                     txt_cantcuototal.setEnabled(true);
-                 //   txt_cuota.setEnabled(true);
                     txt_restante.setEnabled(true);
                     txt_fecultcob.setEnabled(true);
-               //     txt_fecultpag.setEnabled(true);
                     selector_perido.setEnabled(true);
+                    txt_mont_atrz.setEnabled(true);
+                    txt_por_atrz.setEnabled(true);
                 }else{
                     //seteo los valores del formulario a la instancia del prestamo para modificar
                     p.setTasa(Integer.parseInt(txt_tasa.getText().toString()));
@@ -217,9 +221,21 @@ public class listado_prestamo extends AppCompatActivity {
                     }
                     p.setFecha_ult_pago(txt_fecultpag.getText().toString());
                     p.setFecha_ult_cobro(txt_fecultcob.getText().toString());
+
                     if(p.getTipo()==1){
                         p.setCantida_cuotas_restantes(Integer.parseInt(txt_cantcuorest.getText().toString()));
                         p.setCantidad_cuotas(Integer.parseInt(txt_cantcuototal.getText().toString()));
+                        if(!txt_por_atrz.getText().toString().isEmpty()) {
+                            p.setPorcentage_atrazo(Integer.parseInt(txt_por_atrz.getText().toString()));
+                        }else{
+                            p.setPorcentage_atrazo(0);
+                        }
+
+                        if(!txt_mont_atrz.getText().toString().isEmpty()) {
+                            p.setMonto_fijo(Integer.parseInt(txt_mont_atrz.getText().toString()));
+                        }else{
+                            p.setMonto_fijo(0);
+                        }
                     }
 
                     set_mensage("esta seguro de realizar los cambios?",p,0);
@@ -227,11 +243,11 @@ public class listado_prestamo extends AppCompatActivity {
                     txt_tasa.setEnabled(false);
                     txt_cantcuorest.setEnabled(false);
                     txt_cantcuototal.setEnabled(false);
-                  //  txt_cuota.setEnabled(false);
                     txt_restante.setEnabled(false);
                     txt_fecultcob.setEnabled(false);
-                  //  txt_fecultpag.setEnabled(false);
                     selector_perido.setEnabled(false);
+                    txt_mont_atrz.setEnabled(false);
+                    txt_por_atrz.setEnabled(false);
 
                 }
 
@@ -261,7 +277,10 @@ public class listado_prestamo extends AppCompatActivity {
         bt_pagar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                set_mensage("Desea realizar el pago?",p,9);
+               // set_mensage("Desea realizar el pago?",p,9);
+                Intent lanzadera = new Intent(listado_prestamo.this,Pago.class);
+                lanzadera.putExtra("prestamo",p);
+                startActivity(lanzadera);
             }
         });
 
@@ -301,20 +320,16 @@ public class listado_prestamo extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 if(opcion==0) {// opcion 0 para modificar
                     set_proceso_refinanciamiento(p);
+                    Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
                 }else if(opcion==1) {// lo elimino
                     new Prestamo_ctr().set_eliminar(p);
+                    Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
                 }else if(opcion==9) {// Mando el pago
                     Intent lanzadera = new Intent(listado_prestamo.this,Pago.class);
-                    lanzadera.putExtra("id_prestamo",p.getId());//no de prestamo a realizar el pago
-                    lanzadera.putExtra("id_usuario",p.getId_usuario());//no de prestamo a realizar el pago
-                    lanzadera.putExtra("id_cliente",p.getId_cliente());//no de prestamo a realizar el pago
-                    lanzadera.putExtra("tipo",p.getTipo());
-                    lanzadera.putExtra("monto_restante",p.getRestante());
-                    lanzadera.putExtra("fec_ult_pago",p.getFecha_ult_pago());
+                    lanzadera.putExtra("prestamo",p);
                     startActivity(lanzadera);
                 }
 
-                Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
@@ -361,7 +376,7 @@ public class listado_prestamo extends AppCompatActivity {
                     tabla.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                    String[] titulos = {"FECHA VENCE","FECHA PAGO","ESTADO","CUOTA","ATRAZO"};
+                    String[] titulos = {"FECVEN","FECPAGO","ESTADO","CUOTA","ATRAZO"};
 
                     TableRow ln_emcabezados = new TableRow(v.getContext());
                     ln_emcabezados.setBackgroundColor(Color.GREEN);
@@ -400,9 +415,12 @@ public class listado_prestamo extends AppCompatActivity {
                                         label.setText(""+amortz.getCuota());
                                         break;
                                     case 4:
-                                        double atrazo = Math.abs(Math.round(
-                                                amortz.getCuota() - (amortz.getCapital()+amortz.getInteres())
-                                                ));
+                                        double atrazo=  Math.round(amortz.getCapital()+amortz.getInteres())
+                                                - Math.round(amortz.getCuota());
+
+                                        if(atrazo<0){
+                                            atrazo=0;
+                                        }
                                         label.setText(""+atrazo);
                                         break;
                                 }

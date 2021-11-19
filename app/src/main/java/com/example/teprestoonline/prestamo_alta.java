@@ -46,6 +46,8 @@ public class prestamo_alta {
     private EditText txt_tasa;
     private EditText txt_restante;
     private EditText txt_fecha_inicio;
+    private EditText txt_porct_atrz;
+    private EditText txt_mont_fijo;
     private CheckBox opc_regular;
     private CheckBox opc_cuota;
     private Cliente cliente;
@@ -90,6 +92,9 @@ public class prestamo_alta {
          opc_cuota = (CheckBox) v.findViewById(R.id.prestamo_alta_opcion_cuota);
          txt_fecha_inicio = (EditText) v.findViewById(R.id.prestamo_alta_fecha_incio);
 
+         txt_porct_atrz =  (EditText) v.findViewById(R.id.prestamo_alta_porct_atrazo);
+         txt_mont_fijo =  (EditText) v.findViewById(R.id.prestamo_alta_mnt_fijo_atraz);
+
          txt_cant_cuotas = (EditText) v.findViewById(R.id.prestamo_alta_cantidad_cuotas);
          txt_cuota = (EditText) v.findViewById(R.id.prestamo_alta_cuota);
 
@@ -123,6 +128,8 @@ public class prestamo_alta {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b) {
                     txt_cant_cuotas.setEnabled(false);
+                    txt_porct_atrz.setEnabled(false);
+                    txt_mont_fijo.setEnabled(false);
                     opc_cuota.setChecked(false);
                 }
             }
@@ -134,7 +141,10 @@ public class prestamo_alta {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b) {
                     txt_cant_cuotas.setEnabled(true);
+                    txt_porct_atrz.setEnabled(true);
+                    txt_mont_fijo.setEnabled(true);
                     opc_regular.setChecked(false);
+
                 }
             }
         });
@@ -233,6 +243,19 @@ public class prestamo_alta {
             p.setCapital_cuota(capital_cuota);
             p.setCuota(cuotare_dondeada);
             p.setRestante(restante);
+
+            if(!txt_porct_atrz.getText().toString().isEmpty()) {
+                p.setPorcentage_atrazo(Integer.parseInt(txt_porct_atrz.getText().toString()));
+            }else{
+                p.setPorcentage_atrazo(0);
+            }
+
+            if(!txt_mont_fijo.getText().toString().isEmpty()) {
+                p.setMonto_fijo(Integer.parseInt(txt_mont_fijo.getText().toString()));
+            }else{
+                p.setMonto_fijo(0);
+            }
+
         }
 
         txt_restante.setText(""+p.getRestante());
