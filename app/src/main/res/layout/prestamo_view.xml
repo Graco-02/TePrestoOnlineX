@@ -459,7 +459,7 @@
                         android:padding="10dp">
 
                         <TextView
-                            android:id="@+id/textView22"
+                            android:id="@+id/prestamo_view_amortizaciones_encabezado"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

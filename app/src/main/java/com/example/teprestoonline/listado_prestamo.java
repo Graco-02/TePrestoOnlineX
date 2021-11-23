@@ -262,15 +262,14 @@ public class listado_prestamo extends AppCompatActivity {
             }
         });
 
-
         bt_listar_amortiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                if(ln_listado_amor.getVisibility() == View.VISIBLE){
                    ln_listado_amor.setVisibility(View.GONE);
                }else {
-                   ln_listado_amor.setVisibility(View.VISIBLE);
                    set_listado_amortizaciones(p, v);
+                   ln_listado_amor.setVisibility(View.VISIBLE);
                }
             }
         });
@@ -288,7 +287,12 @@ public class listado_prestamo extends AppCompatActivity {
         bt_hist_pagos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(ln_listado_amor.getVisibility() == View.VISIBLE){
+                    ln_listado_amor.setVisibility(View.GONE);
+                }else {
+                    set_listado_pagos(p,v);
+                    ln_listado_amor.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -367,12 +371,14 @@ public class listado_prestamo extends AppCompatActivity {
         return dataAdapter;
     }
 
-
     private void set_listado_amortizaciones(Prestamo p,View v){
+
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME2).child(p.getId());
         final Query usuQuery = ref.orderByChild("fecha_alta_unix");
         LinearLayout listado_amorizaciones = (LinearLayout) v.findViewById(R.id.prestamo_view_lista_amortizaciones);
+        TextView encabezado = (TextView) v.findViewById(R.id.prestamo_view_amortizaciones_encabezado);
+        encabezado.setText("AMORTIZACIONES");
 
         usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -451,5 +457,82 @@ public class listado_prestamo extends AppCompatActivity {
         });
     }
 
+
+    private void set_listado_pagos(Prestamo p,View v){
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME3).child(p.getId());
+        final Query usuQuery = ref.orderByChild("fecha_alta_unix");
+        LinearLayout listado_amorizaciones = (LinearLayout) v.findViewById(R.id.prestamo_view_lista_amortizaciones);
+        TextView encabezado = (TextView) v.findViewById(R.id.prestamo_view_amortizaciones_encabezado);
+        encabezado.setText("HISTORICO PAGOS");
+
+        usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    listado_amorizaciones.removeAllViews();//limpio el contenedor
+                    TableLayout tabla = new TableLayout(v.getContext());
+                    tabla.setStretchAllColumns(true);
+                    tabla.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                    String[] titulos = {"FECPAGO","MONTO","CAPIAMORT","INTAMORT"};
+
+                    TableRow ln_emcabezados = new TableRow(v.getContext());
+                    ln_emcabezados.setBackgroundColor(Color.GREEN);
+
+                    for(int i=0;i<titulos.length;i++) {
+
+                        TextView label = new TextView(v.getContext());
+                        label.setText(titulos[i]);
+                        label.setPadding(5,5,5,5);
+                        ln_emcabezados.addView(label);
+                    }
+
+                    tabla.addView(ln_emcabezados);
+                    listado_amorizaciones.addView(tabla);
+
+                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
+
+                        if(hijo.getValue(com.example.teprestoonline.Modelo.Pago.class).getId_prestamo().equalsIgnoreCase(p.getId())) {
+                            com.example.teprestoonline.Modelo.Pago pago
+                                    = hijo.getValue(com.example.teprestoonline.Modelo.Pago.class);
+
+                            TableRow lnX2 = new TableRow(v.getContext());
+                            lnX2.setOrientation(LinearLayout.HORIZONTAL);
+
+                            for(int i=0;i<titulos.length;i++) {
+                                TextView label = new TextView(v.getContext());
+                                switch (i){
+                                    case 0:
+                                        label.setText(pago.getFecha_pago());
+                                        break;
+                                    case 1:
+                                        label.setText(""+pago.getMonto_pagado());
+                                        break;
+                                    case 2:
+                                        label.setText(""+Math.round(pago.getCapital_amortizado()));
+                                        break;
+                                    case 3:
+                                        label.setText(""+Math.round(pago.getInteres_amortizado()));
+                                        break;
+                                }
+
+                                lnX2.addView(label);
+                            }
+                            tabla.addView(lnX2);
+                        }
+                    }
+                }else{
+                    Toast.makeText(listado_prestamo.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }
