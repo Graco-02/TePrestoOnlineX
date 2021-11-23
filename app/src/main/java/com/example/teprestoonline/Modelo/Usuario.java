@@ -26,7 +26,7 @@ public class Usuario {
     private int contador_clave;
 
 
-    public static Usuario usuario_logueado = null;
+    public static Usuario usuario_logueado;
 
     public String getId() {
         return id;

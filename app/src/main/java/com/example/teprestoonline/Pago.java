@@ -42,6 +42,8 @@ public class Pago extends AppCompatActivity {
     private Prestamo prestamo;
     private EditText txt_fecha;
     private double monto_amortizar;
+    private double capital_amortizado;
+    private double interes_amortizado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,8 +138,11 @@ public class Pago extends AppCompatActivity {
                 ) {
                     mipago.setMonto_pagado(Double.parseDouble(txt_monto_pago.getText().toString()));
                     mipago.setFecha_pago(txt_fecha.getText().toString());
+
                     set_proceso_amortiza_pago();
-                    Toast.makeText(Pago.this,"Prestamo  Cuota + ",Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(Pago.this,"Prestamo  Realizado  ",Toast.LENGTH_LONG).show();
+
                 }else{
                    txt_monto_pago.setError("Se debe informar mayor a 0");
                    txt_monto_pago.requestFocus();
@@ -159,17 +164,19 @@ public class Pago extends AppCompatActivity {
 
     
     protected void  set_proceso_amortiza_pago(){
-        new Prestamo_ctr().set_pago(mipago);
         prestamo.set_datos_ultima_modificaion();
         prestamo.setFecha_ult_pago(txt_fecha.getText().toString());
         prestamo.setRestante(
                 prestamo.getRestante() - mipago.getMonto_pagado()
                 );
-        new Prestamo_ctr().set_prestamo(prestamo);
+        new Prestamo_ctr().set_prestamo(prestamo); //actualizo los datos del prestamo
 
         if(prestamo.getTipo()==1){
             monto_amortizar = mipago.getMonto_pagado();
             set_amortizaciones_cuotas(prestamo);
+        }else{
+            mipago.setTipo("R");
+            new Prestamo_ctr().set_pago(mipago);
         }
 
         finish();
@@ -184,43 +191,79 @@ public class Pago extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
+               //     double  capital_amortizado=0;
+                //    double interes_amortizado=0;
 
+                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         if(hijo.getValue(amortizacion_cuota.class).getId_prestamo().equalsIgnoreCase(p.getId())) {
                             amortizacion_cuota amortz = hijo.getValue(amortizacion_cuota.class);
                             //validar si la cuota no ha sido pagada ya
-                            if(amortz.getEstado()!=2) {
-                                if (amortz.getCuota() <= monto_amortizar) {
-                                    double cuota = amortz.getCuota();
-                                    System.out.println(" CUOTA CUBIERTA " + amortz.getFecha_cuota());
-                                    amortz.setEstado(2);
-                                    amortz.setCuota(0);
-                                    amortz.setFecha_pago(new Fecha_utiliti().getFechaSystemaYYMMDD());
-                                    amortz.set_datos_ultima_modificaion();
-                                    monto_amortizar -= cuota;
-                                    System.out.println(" PAGO RESTANTE " + monto_amortizar );
+                            if(amortz.getEstado()!=2 && monto_amortizar > 0) {
 
-                                    amortz.setCapital(0);
-                                    amortz.setInteres(0);
-                                } else {
-                                    if (monto_amortizar > 0) {
-                                        System.out.println(" CUOTA PARCIAL " + amortz.getFecha_cuota());
-                                        double cuota = amortz.getCuota();
-                                        amortz.setFecha_pago(new Fecha_utiliti().getFechaSystemaYYMMDD());
-                                        amortz.set_datos_ultima_modificaion();
-                                        amortz.setCuota(amortz.getCuota() - monto_amortizar);
+                                double capital = amortz.getCapital();
+                                double interes = amortz.getInteres();
+                                double cuota= amortz.getCuota();
 
+                                System.out.println("********** AMORTIZANDO PAGO *************");
 
-                                        double interes = amortz.getInteres();
-                                        amortz.setInteres( interes - monto_amortizar );
-                                        monto_amortizar-=interes;
+                                System.out.println("Fecha cuota  . :" + amortz.getFecha_cuota());
 
-                                        if(monto_amortizar>0){
-                                            double capital = amortz.getCapital();
-                                            amortz.setCapital( capital - monto_amortizar);
-                                            monto_amortizar-=capital;
-                                        }
+                                System.out.println("Monto . :" + monto_amortizar);
+                                System.out.println("interes . :" + interes);
+                                System.out.println("capital . :" + capital);
+                                System.out.println("cuota . :" + cuota);
+                                System.out.println("capital_amortizado . :" + capital_amortizado);
+                                System.out.println("interes_amortizado . :" + interes_amortizado);
+
+                                System.out.println("**********************");
+
+                                   if(interes <= monto_amortizar){
+                                        interes_amortizado =  interes;
+                                        monto_amortizar = monto_amortizar - interes;
+                                        interes = interes - interes_amortizado;
+                                        cuota = cuota - interes_amortizado;
+                                    }else{
+                                        interes_amortizado = monto_amortizar;
+                                        monto_amortizar = monto_amortizar - interes;
+                                        interes = interes - interes_amortizado;
+                                        cuota = cuota - interes_amortizado;
                                     }
+
+                                    if(capital<=monto_amortizar){
+                                        capital_amortizado = capital;
+                                        monto_amortizar = monto_amortizar - capital;
+                                        capital = capital - capital_amortizado;
+                                        cuota = cuota - capital_amortizado;
+                                    }else{
+                                        capital_amortizado = monto_amortizar;
+                                        monto_amortizar = monto_amortizar - capital;
+                                        capital = capital - capital_amortizado;
+                                        cuota = cuota - capital_amortizado;
+                                    }
+
+                                if(capital < 1){
+                                    capital=0;
+                                }
+                                if(interes < 1){
+                                    interes = 0;
+                                }
+
+                                if(cuota < 1){
+                                    cuota = 0;
+                                }
+
+                                amortz.setCapital(capital);
+                                amortz.setInteres(interes);
+                                amortz.setCuota(cuota);
+
+                                mipago.setCapital_amortizado(mipago.getCapital_amortizado()+capital_amortizado);
+                                mipago.setInteres_amortizado(mipago.getInteres_amortizado()+interes_amortizado);
+                                mipago.setTipo("C");
+                                new Prestamo_ctr().set_pago(mipago);
+
+                                if(cuota <= 0){
+                                    amortz.setEstado(2); // si la cuota esta totalmente paga la seteo como pagada
+                                    amortz.setFecha_pago(new Fecha_utiliti().getFechaSystemaYYMMDD());
                                 }
                             }
 

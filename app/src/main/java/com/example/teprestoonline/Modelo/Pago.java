@@ -20,6 +20,8 @@ public class Pago {
     private String fecha_pago;
     private double monto_pagado;
     private double monto_restante;
+    private double capital_amortizado;
+    private double interes_amortizado;
     private String tipo;
 
 
@@ -118,6 +120,22 @@ public class Pago {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public double getCapital_amortizado() {
+        return capital_amortizado;
+    }
+
+    public void setCapital_amortizado(double capital_amortizado) {
+        this.capital_amortizado = capital_amortizado;
+    }
+
+    public double getInteres_amortizado() {
+        return interes_amortizado;
+    }
+
+    public void setInteres_amortizado(double interes_amortizado) {
+        this.interes_amortizado = interes_amortizado;
     }
 
     public void set_datos_unicos(){

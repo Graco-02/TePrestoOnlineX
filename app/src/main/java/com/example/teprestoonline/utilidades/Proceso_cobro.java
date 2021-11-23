@@ -220,7 +220,6 @@ public class Proceso_cobro {
         if(prestamo.getPorcentage_atrazo()>0){
             tasa_interes=prestamo.getPorcentage_atrazo();
             double tasa = (tasa_interes / CT_100);
-            // double tasa = (prestamo.getTasa()/ CT_100);
             double tasa_periodificada = (  tasa / periodo);
             double interes = monto * tasa_periodificada;
             return interes;
@@ -243,8 +242,8 @@ public class Proceso_cobro {
     protected double set_proceso_cuota_en_atrazo(double monto_capital,double monto_interes,Prestamo p,int dias_atrazo){
         double cuota = Math.round(monto_capital + monto_interes);
         double nuevo_interes = 0;
-
-        for (int i=0;i<dias_atrazo;i++){
+        System.out.println("DIAS EN ATRAZO . >" +dias_atrazo );
+        for (int i=0;i<=dias_atrazo;i++){
             nuevo_interes += get_interes_cuota(p,cuota);
         }
 

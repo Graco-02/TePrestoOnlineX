@@ -424,6 +424,15 @@
                         android:layout_weight="1"
                         app:srcCompat="@android:drawable/ic_menu_delete" />
 
+                    <Button
+                        android:id="@+id/prestamo_view_hist_pagos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="historial Pagos"
+                        android:textAlignment="center"
+                        android:textDirection="locale" />
+
                     <ImageButton
                         android:id="@+id/prestamo_view_bt_listar_amort"
                         android:layout_width="wrap_content"

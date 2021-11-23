@@ -31,16 +31,23 @@ public class Prestamo_ctr {
 
     public void set_prestamo_amortizaciones(amortizacion_cuota amortizacion){
         myRef = database.getReference(BBDD_NAME2);
-        myRef.child(amortizacion.getId_prestamo()).child(amortizacion.getId()).setValue(amortizacion);
+      //  myRef.child(amortizacion.getId_prestamo()).child(amortizacion.getId()).setValue(amortizacion);
+        myRef.child(amortizacion.getId_prestamo()).child(amortizacion.getFecha_cuota()).setValue(amortizacion);
     }
 
     public void set_eliminar(Prestamo p){
         myRef.child(p.getId()).removeValue();
         set_eliminar_amortizacion(p);
+        set_eliminar_pagos(p);
     }
 
     private void set_eliminar_amortizacion(Prestamo p){
         myRef = database.getReference(BBDD_NAME2);
+        myRef.child(p.getId()).removeValue();
+    }
+
+    private void set_eliminar_pagos(Prestamo p){
+        myRef = database.getReference(BBDD_NAME3);
         myRef.child(p.getId()).removeValue();
     }
 

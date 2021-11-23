@@ -172,6 +172,7 @@ public class listado_prestamo extends AppCompatActivity {
         ImageButton bt_pagar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_pagar);
         ImageButton bt_eliminar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_eliminar);
         ImageButton bt_listar_amortiz = (ImageButton) v.findViewById(R.id.prestamo_view_bt_listar_amort);
+        Button bt_hist_pagos = (Button) v.findViewById(R.id.prestamo_view_hist_pagos);
 
         LinearLayout ln_listado_amor = (LinearLayout) v.findViewById(R.id.prestamo_view_amorizaciones);
         LinearLayout ln_datos_cuotas = (LinearLayout) v.findViewById(R.id.prestamo_view_datos_cuotas);
@@ -284,6 +285,13 @@ public class listado_prestamo extends AppCompatActivity {
             }
         });
 
+        bt_hist_pagos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         return v;
     }
 
@@ -296,9 +304,9 @@ public class listado_prestamo extends AppCompatActivity {
             double tasa = Double.parseDouble(""+p.getTasa()) / 100 ;
             int ganancia = Integer.parseInt(String.valueOf(Math.round((monto * tasa))));
             double restante = monto + ganancia;
-            double cuota = restante  / p.getCantidad_cuotas();
-            double interes_cuota = (double) (ganancia) / p.getCantidad_cuotas();
-            double capital_cuota = (double) (monto) / p.getCantidad_cuotas();
+            double cuota = Math.round( restante  / p.getCantidad_cuotas() );
+            double interes_cuota = (double) (ganancia) / p.getCantidad_cuotas() ;
+            double capital_cuota =  (double) (monto) / p.getCantidad_cuotas();
 
             p.setInteres_cuota(interes_cuota);
             p.setCapital_cuota(capital_cuota);
@@ -412,13 +420,14 @@ public class listado_prestamo extends AppCompatActivity {
                                         label.setText(amortz.getEstado_descripcion());
                                         break;
                                     case 3:
-                                        label.setText(""+amortz.getCuota());
+                                        label.setText(""+Math.round(amortz.getCuota()));
                                         break;
                                     case 4:
-                                        double atrazo=  Math.round(amortz.getCapital()+amortz.getInteres())
-                                                - Math.round(amortz.getCuota());
+                                        double atrazo =  Math.ceil(
+                                                amortz.getCapital()+amortz.getInteres()
+                                                ) - amortz.getCuota();
 
-                                        if(atrazo<0){
+                                        if(atrazo < 0){
                                             atrazo=0;
                                         }
                                         label.setText(""+atrazo);
