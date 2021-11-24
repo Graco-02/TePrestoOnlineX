@@ -128,10 +128,13 @@ public class Proceso_cobro {
                                     dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
 
                                     double nuevo_interes = amorizacion.getInteres();
-
-                                    nuevo_interes += set_proceso_cuota_en_atrazo(amorizacion.getInteres(),
+                                    double interes_generado = set_proceso_cuota_en_atrazo(amorizacion.getInteres(),
                                             amorizacion.getCapital(),p,dias_transcurridos);
+                                    nuevo_interes += interes_generado;
                                     amorizacion.setInteres(nuevo_interes);
+
+                                    p.setRestante(p.getRestante()+interes_generado);// sumo los intereses generados al restante
+                                    new Prestamo_ctr().set_prestamo(p); //actualizo los datos del prestamo
                                 }
 
                             if(nuevo_estado != amorizacion.getEstado()) {
