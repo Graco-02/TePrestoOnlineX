@@ -179,6 +179,10 @@ public class Pago extends AppCompatActivity {
     protected void  set_proceso_amortiza_pago(){
         prestamo.set_datos_ultima_modificaion();
         prestamo.setFecha_ult_pago(txt_fecha.getText().toString());
+        prestamo.setRestante(
+                prestamo.getRestante() - mipago.getMonto_pagado()
+        );
+
         new Prestamo_ctr().set_prestamo(prestamo); //actualizo los datos del prestamo
 
         if(prestamo.getTipo()==1){
@@ -186,9 +190,6 @@ public class Pago extends AppCompatActivity {
             set_amortizaciones_cuotas(prestamo);
         }else{
             mipago.setTipo("R");
-            prestamo.setRestante(
-                prestamo.getRestante() - mipago.getMonto_pagado()
-                );
             new Prestamo_ctr().set_pago(mipago);
         }
 
@@ -215,6 +216,8 @@ public class Pago extends AppCompatActivity {
                                 double capital = Math.ceil(amortz.getCapital());
                                 double interes = Math.round(amortz.getInteres());
                                 double cuota= amortz.getCuota();
+                                interes_amortizado = 0;
+                                capital_amortizado = 0;
 
                                 System.out.println("********** AMORTIZANDO PAGO *************");
                                 System.out.println("Fecha cuota  . :" + amortz.getFecha_cuota());
@@ -222,8 +225,6 @@ public class Pago extends AppCompatActivity {
                                 System.out.println("interes . :" + interes);
                                 System.out.println("capital . :" + capital);
                                 System.out.println("cuota . :" + cuota);
-                                System.out.println("capital_amortizado . :" + capital_amortizado);
-                                System.out.println("interes_amortizado . :" + interes_amortizado);
                                 System.out.println("**********************");
 
                                 if(interes <= monto_amortizar){
@@ -231,36 +232,33 @@ public class Pago extends AppCompatActivity {
                                     monto_amortizar = monto_amortizar - interes;
                                     interes = 0;
                                     cuota = cuota - interes_amortizado;
-                                    monto_restante = monto_restante - interes_amortizado;
                                 }else{
                                     if(monto_amortizar > 0) {
                                         interes_amortizado = monto_amortizar;
                                         monto_amortizar = 0;
                                         interes = interes - interes_amortizado;
                                         cuota = cuota - interes_amortizado;
-                                        monto_restante = monto_restante - interes_amortizado;
                                     }
                                 }
 
                                 if(capital<=monto_amortizar){
                                     capital_amortizado = capital;
-                                    monto_amortizar = monto_amortizar - capital;
+                                    monto_amortizar = monto_amortizar - capital_amortizado;
                                     capital = 0;
                                     cuota = cuota - capital_amortizado;
-                                    monto_restante = monto_restante - capital_amortizado;
                                 }else{
                                     if(monto_amortizar > 0) {
                                         capital_amortizado = monto_amortizar;
                                         monto_amortizar = 0;
                                         capital = capital - capital_amortizado;
                                         cuota = cuota - capital_amortizado;
-                                        monto_restante = monto_restante - capital_amortizado;
                                     }
                                 }
 
                                 if(capital < 1){
                                     capital=0;
                                 }
+
                                 if(interes < 1){
                                     interes = 0;
                                 }
@@ -273,6 +271,10 @@ public class Pago extends AppCompatActivity {
                                 amortz.setInteres(interes);
                                 amortz.setCuota(cuota);
 
+                                System.out.println("mipago.getCapital_amortizado() . :" + mipago.getCapital_amortizado());
+                                System.out.println("getInteres_amortizado() . :" + mipago.getInteres_amortizado());
+                                System.out.println("capital_amortizado . :" + capital_amortizado);
+                                System.out.println("interes_amortizado . :" + interes_amortizado);
                                 mipago.setCapital_amortizado(mipago.getCapital_amortizado()+capital_amortizado);
                                 mipago.setInteres_amortizado(mipago.getInteres_amortizado()+interes_amortizado);
                                 mipago.setTipo("C");
@@ -284,8 +286,6 @@ public class Pago extends AppCompatActivity {
                                     p.setCantida_cuotas_restantes(p.getCantida_cuotas_restantes() - 1);
                                 }
 
-                                prestamo.setRestante(monto_restante);// solo resto al restante lo amortizado a la cuota
-                                new Prestamo_ctr().set_prestamo(prestamo); //actualizo los datos del prestamo
                             }
 
                             new Prestamo_ctr().set_prestamo_amortizaciones(amortz);

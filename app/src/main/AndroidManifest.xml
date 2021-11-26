@@ -11,7 +11,8 @@
         android:theme="@style/Theme.TePrestoOnline">
         <activity android:name=".Pago"></activity>
         <activity android:name=".listado_prestamo"></activity>
-        <activity android:name=".listado_prestamos"></activity>
+        <!--<activity android:name=".listado_prestamos"></activity>-->
+        android:name="androidx.multidex.listado_prestamos" >
         <activity android:name=".mantenimiento_clientes" />
         <activity android:name=".Inicio" />
         <activity android:name=".MainActivity">

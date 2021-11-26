@@ -85,9 +85,6 @@ public class Fecha_utiliti  extends Date{
         //2021-2021 = 0
         //02 - 01 = 1 * 30 = 30
         //1 - 31 = 30
-        System.out.println("EVALUANDO FECHAS" );
-        System.out.println("EVALUANDO FECHAS " + " FECHA 1 = " + fecha + " FECHA 2 " + fecha2);
-        System.out.println(dia + " -- " +  dia2 + " -- " +  dia_t);
 
         /*
         if(dia == get_dias_mes(mes,year)){
@@ -102,9 +99,7 @@ public class Fecha_utiliti  extends Date{
         }*/
 
         int resultado = ( ( (year_t * 12) + mest ) * 30) + dia_t;
-        System.out.println(" calculo y = " +  year_t + " m " + mest + " d " +  dia_t);
-        System.out.println(" calculo2 " +   ( ( (year_t * 12) + mest ) * 30)  + " , "  +  dia_t);
-        System.out.println(" resultado " +  resultado);
+
         return resultado;
     }
 
@@ -340,12 +335,9 @@ public class Fecha_utiliti  extends Date{
         double year_ini = Integer.parseInt(fecha_spl[0]);
         double mes_ini = Integer.parseInt(fecha_spl[1]);
         double dia_ini = Integer.parseInt(fecha_spl[2]);
-        System.out.println("CONVIRTIENDO FECHA");
-        System.out.println(fecha);
 
         double fecha_num = (year_ini + (mes_ini / 12.0 ) ) + (dia_ini / 365.0);
 
-        System.out.println("FECHA CONVERTIDA"+fecha_num);
         return fecha_num;
     }
 

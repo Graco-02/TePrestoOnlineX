@@ -113,4 +113,7 @@ public class Direccion {
         setFecha_modificacion_humana(formattedDate); // seteo la fecha de ultima modificacion legible
     }
 
+    public String get_direccion_unificada(){
+        return getMunicipio() + " , " + getSector() + " , " + getCalle() + " , " + getVivienda();
+    }
 }

@@ -17,6 +17,7 @@ import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Prestamo_cuota;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
+import com.example.teprestoonline.utilidades.PDF_MAnager;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -312,7 +313,13 @@ public class prestamo_alta {
                     controlador_prestamo.set_proceso_amortizaciones(p);
                 }
                 Toast.makeText(prestamo_alta.this.actividad,"Agregado",Toast.LENGTH_LONG).show();
+                if(opc_generar_contrato.isChecked()){
+                    PDF_MAnager pdf_manager = new PDF_MAnager();
+                    String nombre_contrato = p.getId()+"-"+new Fecha_utiliti().getFechaSystemaYYMMDD();
+                    pdf_manager.set_proceso_generar_contrato(nombre_contrato,p,cliente);
+                }
                 dialog.dismiss();
+
             }
         });
 
