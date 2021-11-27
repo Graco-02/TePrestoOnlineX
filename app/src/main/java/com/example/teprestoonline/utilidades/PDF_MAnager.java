@@ -1,7 +1,11 @@
 package com.example.teprestoonline.utilidades;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Prestamo;
@@ -16,13 +20,18 @@ import com.lowagie.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 public class PDF_MAnager {
 
     private  String archivo_nombre;
-    public static final String RUTA_RAIZ = "/storage/emulated/0/PRESTAMOS_APP";
-    public static final String RUTA_ARCHIVOS_PDF = "/storage/emulated/0/PRESTAMOS_APP/PDF";
-    public static final String RUTA_ARCHIVOS_EST = "/storage/emulated/0/PRESTAMOS_APP/ESTADOS";
+    public static final String RUTA_RAIZ = "/storage/emulated/0/";
+    public static final String RUTA_ARCHIVOS_PDF = "/storage/emulated/0/TE_PRESTO_ONL/PDF";
+    public static final String RUTA_ARCHIVOS_EST = "/storage/emulated/0/TE_PRESTO_ONL/ESTADOS";
     public static final String RUTA_CONTRATOS = "CONTRATOS";
+    public static final String RUTA_TE_PRESTO_ONL = "TE_PRESTO_ONL";
+
     private Document documento;
     private File archivo_pdf;
     private PdfWriter escritor_pdf;
@@ -33,15 +42,22 @@ public class PDF_MAnager {
     private long hora = new  Fecha_utiliti().getTime();
     private Prestamo prestamo=null;
     private Cliente cliente=null;
+    private AppCompatActivity actividad;
 
+    public PDF_MAnager(AppCompatActivity actividad){
+          this.actividad = actividad;
+    }
+
+    public File getArchivo_pdf(){
+        return archivo_pdf;
+    }
 
     public void set_proceso_generar_contrato(String nombre_archivo,Prestamo p,Cliente cliente){
-        cliente=cliente;
-        prestamo=p;
+        this.cliente = cliente;
+        this.prestamo = p;
         archivo_nombre =  nombre_archivo;
 
         if(set_crear_archivo_contrato() ){
-            if(set_abrir_archivo()){
                 try {
                     documento = new Document(PageSize.A4);
                     escritor_pdf = PdfWriter.getInstance(documento, new FileOutputStream(archivo_pdf));
@@ -51,46 +67,25 @@ public class PDF_MAnager {
                 }catch (Exception e){
                     Log.e("abrir  escritor",e.toString());
                 }
-            }
         }
-    }
-
-    private boolean set_abrir_archivo(){
-        try{
-            //nadaarch aqui
-        }catch (Exception e){
-            Log.e("open document",e.toString());
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean set_cerrar_archivo(){
-        try{
-            documento.close();
-        }catch (Exception e){
-            Log.e("close document",e.toString());
-        }
-
-        return true;
     }
 
     private boolean set_crear_archivo_contrato(){
         try {
-            File folder = new File(Environment.getExternalStorageDirectory().toString(),
-                    RUTA_ARCHIVOS_PDF);
 
-            File folder2 = new File(folder.getAbsolutePath(),
+            File folder = new File(this.actividad.getExternalFilesDir(RUTA_TE_PRESTO_ONL),
                     RUTA_CONTRATOS);
 
             if(!folder.exists()){
-                folder.mkdirs();
+                if(folder.mkdirs()){
+                    Toast.makeText(this.actividad,"CREADO "+folder.getAbsolutePath(),Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(this.actividad,"NO CREADO "+folder.getAbsolutePath(),Toast.LENGTH_LONG).show();
+                }
             }
-            if(!folder2.exists()){
-                folder2.mkdirs();
-            }
-            archivo_pdf = new File(folder2,archivo_nombre);
+
+            archivo_pdf = new File(folder,archivo_nombre);
+
         }catch (Exception e){
             Log.e("ERROR CREANDO ARCHIVO",e.toString());
             return false;
@@ -186,19 +181,19 @@ public class PDF_MAnager {
                 +"_____________________________, dominicano, mayor de edad, de estado civil _________________, Notario Público. "
                 +"de los del número para el municipio de _________, inscrito en el Colegio  _________________________, domiciliado y "
                 +"residente en esta Ciudad y estudio profesional abierto en la casa No.______ de la calle __________________, "
-                +"de esta Ciudad, debidamente asistido por los señores ___________________________ y _____________________   , "
+                +"de esta Ciudad, debidamente asistid@ por los señores ___________________________ y _____________________   , "
                 +"dominicanos, mayores de edad, de estado civil ________________ y ________________, de profesión _______ y _________, "
                 +"portadores de las cédulas de identidad y electoral Nos. ______________________ y ________________________, "
                 +"ambos domiciliados y residentes en la ciudad de Santo Domingo, testigos instrumentales requeridos al efecto, libres de tachas "
-                +"y excepciones, compareció libre y voluntariamente el señor "
+                +"y excepciones, compareció libre y voluntariamente el señ@r "
                 + cliente.getPersona().getNombres()
                 + " , " + cliente.getPersona().getApellidos() + " dominicano, mayor de edad, de estado civil "
                 +"___________________, de ocupación _________________________, portador de la cedula de identidad y "
-                +"electoral No. "+ cliente.getPersona().getIdentificacion() + " , domiciliado y residente en "
+                +"electoral No. "+ cliente.getPersona().getIdentificacion() + " , domiciliad@ y residente en "
                 + cliente.getPersona().getDireccion().get_direccion_unificada()
                 + " de esta Ciudad, para que haga constar en un acto auténtico, como al efecto "
-                +"lo hago constar, lo siguiente: PRIMERO: Que DEBE Y PAGARA al señor ____________________, dominicano, mayor de edad, "
-                +"soltero, Estudiante, portador de cédula de identidad y electoral ________________, domiciliado y residente en la casa No.___, "
+                +"lo hago constar, lo siguiente: PRIMERO: Que DEBE Y PAGARA al señ@r ____________________, dominicano, mayor de edad, "
+                +"solter@, Estudiante, portador de cédula de identidad y electoral ________________, domiciliad@ y residente en la casa No.___, "
                 +" de la calle _______, del Residencial ____________, del Municipio ____________, la suma de RD$ "+prestamo.getRestante()
                 +" ("+nm.Convertir(""+prestamo.getRestante(),true)
                 +" PESOS CON 00/100), dinero que ha recibido de manos del  "
@@ -215,7 +210,7 @@ public class PDF_MAnager {
                 +"vencimiento el _______________ (      ) del mes de  _______________________ del año "
                 +"_______________________________ (            ). " +
                 "Mediante el pago de "+ prestamo.getCantidad_cuotas()  + " cuotas  "
-                +" de RD$ "+ prestamo.getCuota()+ " ( "+ prestamo.getCuota() + " PESOS CON /100),"
+                +" de RD$ "+ prestamo.getCuota()+ " ( "+nm.Convertir(""+ prestamo.getCuota(),true) + " PESOS CON /100),"
                 +"cada una; CUARTO: Que reconoce el derecho que le asiste a el señor _________________,  de proceder a ejecutar la obligación "
                 +"asumida y reconocida en el presente acto, en el caso de que una vez vencido el término antes indicado no se haya "
                 +"realizado el pago de la suma de capital señalada y/o no se haya cumplido con la obligación del pago de las cuotas "
@@ -231,5 +226,26 @@ public class PDF_MAnager {
 
     }
 
+
+    public void set_abrir_documento(String ruta){
+        Toast.makeText(actividad, "Visualizando documento", Toast.LENGTH_LONG).show();
+        File arch = new File(ruta);
+        Uri contratoUri = FileProvider.getUriForFile(actividad,
+                actividad.getPackageName()
+                        + ".provider", arch);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(contratoUri, "application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        try {
+            actividad.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(actividad, "No existe una aplicación para abrir el PDF"
+                    , Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

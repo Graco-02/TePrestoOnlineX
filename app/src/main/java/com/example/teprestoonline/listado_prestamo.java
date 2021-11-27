@@ -2,12 +2,17 @@ package com.example.teprestoonline;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -27,6 +32,7 @@ import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Usuario;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
+import com.example.teprestoonline.utilidades.PDF_MAnager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,7 +179,12 @@ public class listado_prestamo extends AppCompatActivity {
         ImageButton bt_pagar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_pagar);
         ImageButton bt_eliminar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_eliminar);
         ImageButton bt_listar_amortiz = (ImageButton) v.findViewById(R.id.prestamo_view_bt_listar_amort);
+        ImageButton bt_ver_contrato = (ImageButton) v.findViewById(R.id.prestamo_vie_bt_contrato);
         Button bt_hist_pagos = (Button) v.findViewById(R.id.prestamo_view_hist_pagos);
+
+        if(!p.getContrato_ruta().isEmpty()){
+            bt_ver_contrato.setVisibility(View.VISIBLE);
+        }
 
         LinearLayout ln_listado_amor = (LinearLayout) v.findViewById(R.id.prestamo_view_amorizaciones);
         LinearLayout ln_datos_cuotas = (LinearLayout) v.findViewById(R.id.prestamo_view_datos_cuotas);
@@ -296,6 +308,16 @@ public class listado_prestamo extends AppCompatActivity {
             }
         });
 
+
+        bt_ver_contrato.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PDF_MAnager pdf_controler = new PDF_MAnager(listado_prestamo.this);
+                pdf_controler.set_abrir_documento(p.getContrato_ruta());
+
+            }
+        });
+
         return v;
     }
 
@@ -354,6 +376,7 @@ public class listado_prestamo extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+
 
     }
 

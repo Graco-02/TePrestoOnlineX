@@ -2,6 +2,7 @@ package com.example.teprestoonline;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -16,12 +17,14 @@ import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Prestamo_cuota;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
+import com.example.teprestoonline.utilidades.Conversor_archivos_byte;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
 import com.example.teprestoonline.utilidades.PDF_MAnager;
 
 import java.sql.Date;
 import java.util.ArrayList;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class prestamo_alta {
@@ -53,6 +56,7 @@ public class prestamo_alta {
     private CheckBox opc_cuota;
     private Cliente cliente;
     private  AlertDialog ventana = null;
+    private final String CT_PDF = ".pdf";
 
     public prestamo_alta(AppCompatActivity view){
         this.actividad = view;
@@ -307,19 +311,22 @@ public class prestamo_alta {
         builder.setTitle("Notificacion ");
         builder.setMessage(mensaje);
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             public void onClick(DialogInterface dialog, int id) {
+
+                if(opc_generar_contrato.isChecked()){//genero el contrato como archivo PDF
+                    PDF_MAnager pdf_manager = new PDF_MAnager(actividad);
+                    String nombre_contrato = p.getId()+"-"+new Fecha_utiliti().getFechaSystemaYYMMDD()+CT_PDF;
+                    pdf_manager.set_proceso_generar_contrato(nombre_contrato , p , cliente);
+                    p.setContrato_ruta(pdf_manager.getArchivo_pdf().getAbsolutePath().toString());
+                }
+
                 controlador_prestamo.set_prestamo(p);
                 if(p.getTipo()==1){
                     controlador_prestamo.set_proceso_amortizaciones(p);
                 }
                 Toast.makeText(prestamo_alta.this.actividad,"Agregado",Toast.LENGTH_LONG).show();
-                if(opc_generar_contrato.isChecked()){
-                    PDF_MAnager pdf_manager = new PDF_MAnager();
-                    String nombre_contrato = p.getId()+"-"+new Fecha_utiliti().getFechaSystemaYYMMDD();
-                    pdf_manager.set_proceso_generar_contrato(nombre_contrato,p,cliente);
-                }
                 dialog.dismiss();
-
             }
         });
 

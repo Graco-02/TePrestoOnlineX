@@ -28,6 +28,15 @@ public class Prestamo extends Prestamo_cuota implements Serializable {
     private int porcentage_atrazo;
     private int monto_fijo;
 
+    private String contrato_ruta;
+
+    public String getContrato_ruta() {
+        return contrato_ruta;
+    }
+
+    public void setContrato_ruta(String contrato_ruta) {
+        this.contrato_ruta = contrato_ruta;
+    }
 
     public int getTipo() {
         return tipo;

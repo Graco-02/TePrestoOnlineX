@@ -444,6 +444,15 @@
                         android:layout_weight="1"
                         android:visibility="gone"
                         app:srcCompat="@android:drawable/ic_menu_agenda" />
+
+                    <ImageButton
+                        android:id="@+id/prestamo_vie_bt_contrato"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/contrato_resise" />
+
                 </LinearLayout>
 
                 <LinearLayout
