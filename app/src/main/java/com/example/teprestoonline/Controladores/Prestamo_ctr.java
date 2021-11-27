@@ -15,6 +15,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+
 import androidx.annotation.NonNull;
 
 public class Prestamo_ctr {
@@ -37,6 +39,8 @@ public class Prestamo_ctr {
 
     public void set_eliminar(Prestamo p){
         myRef.child(p.getId()).removeValue();
+        File file = new File(p.getContrato_ruta());
+        file.delete();
         set_eliminar_amortizacion(p);
         set_eliminar_pagos(p);
     }

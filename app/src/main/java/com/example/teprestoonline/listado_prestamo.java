@@ -353,6 +353,10 @@ public class listado_prestamo extends AppCompatActivity {
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(opcion==0) {// opcion 0 para modificar
+                    File file = new File(p.getContrato_ruta());
+                    file.delete();
+                    p.setContrato_ruta("");//limpio el ultimo contrato
+
                     set_proceso_refinanciamiento(p);
                     Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
                 }else if(opcion==1) {// lo elimino
