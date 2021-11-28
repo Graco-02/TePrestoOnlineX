@@ -240,7 +240,7 @@
                 android:ems="10"
                 android:enabled="false"
                 android:hint="porcentage por atrazo"
-                android:inputType="textPersonName"
+                android:inputType="number"
                 android:textAlignment="center" />
 
             <EditText
@@ -251,7 +251,7 @@
                 android:ems="10"
                 android:enabled="false"
                 android:hint="monto fijo por atrazo"
-                android:inputType="textPersonName"
+                android:inputType="number"
                 android:textAlignment="center" />
 
             <LinearLayout

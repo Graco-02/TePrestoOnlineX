@@ -19,9 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Prestamo_ctr;
+import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
+import com.example.teprestoonline.utilidades.PDF_MAnager;
 import com.example.teprestoonline.utilidades.Proceso_cobro;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,6 +49,7 @@ public class Pago extends AppCompatActivity {
     private double interes_amortizado;
     private CheckBox opcion_imp;
     private CheckBox opcion_pdf;
+    private Cliente cliente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class Pago extends AppCompatActivity {
 
         if(datos!=null){
             prestamo = (Prestamo) datos.getSerializableExtra("prestamo");
+            cliente = (Cliente) datos.getSerializableExtra("cliente");
 
             if(prestamo.getTipo()==1){
                 LinearLayout lycuotas = (LinearLayout) findViewById(R.id.pago_datos_cuotas);
@@ -183,7 +187,13 @@ public class Pago extends AppCompatActivity {
                 prestamo.getRestante() - mipago.getMonto_pagado()
         );
 
-        new Prestamo_ctr().set_prestamo(prestamo); //actualizo los datos del prestamo
+        //proceso creacion del recibo enPDF si el cheq esta seleccionado
+        if(opcion_pdf.isChecked()){
+            PDF_MAnager manejador_pdf = new PDF_MAnager(this);
+            String nombre_recibo = mipago.getId()+mipago.getFecha_pago()+".pdf";
+            manejador_pdf.set_proceso_generar_recibo(nombre_recibo,prestamo,cliente,mipago);
+            mipago.setRecibo_rutta(manejador_pdf.getArchivo_pdf().getAbsolutePath().toString());
+        }
 
         if(prestamo.getTipo()==1){
             monto_amortizar = mipago.getMonto_pagado();
@@ -191,6 +201,7 @@ public class Pago extends AppCompatActivity {
         }else{
             mipago.setTipo("R");
             new Prestamo_ctr().set_pago(mipago);
+            new Prestamo_ctr().set_prestamo(prestamo); //actualizo los datos del prestamo
         }
 
         finish();
@@ -284,6 +295,7 @@ public class Pago extends AppCompatActivity {
                                     amortz.setEstado(2); // si la cuota esta totalmente paga la seteo como pagada
                                     amortz.setFecha_pago(new Fecha_utiliti().getFechaSystemaYYMMDD());
                                     p.setCantida_cuotas_restantes(p.getCantida_cuotas_restantes() - 1);
+                                    new Prestamo_ctr().set_prestamo(prestamo); //actualizo los datos del prestamo
                                 }
 
                             }

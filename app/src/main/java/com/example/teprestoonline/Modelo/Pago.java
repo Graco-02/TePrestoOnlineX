@@ -24,6 +24,15 @@ public class Pago {
     private double interes_amortizado;
     private String tipo;
 
+    private String recibo_rutta="";
+
+    public String getRecibo_rutta() {
+        return recibo_rutta;
+    }
+
+    public void setRecibo_rutta(String recibo_rutta) {
+        this.recibo_rutta = recibo_rutta;
+    }
 
     public String getId_prestamo() {
         return id_prestamo;

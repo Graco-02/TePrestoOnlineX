@@ -48,6 +48,7 @@ public class listado_prestamo extends AppCompatActivity {
 
 
     private LinearLayout listado;
+    private Cliente cliente = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +57,14 @@ public class listado_prestamo extends AppCompatActivity {
 
         listado = (LinearLayout) findViewById(R.id.listado_prestamos_lista);
 
-        Bundle datos = getIntent().getExtras();
+      //  Bundle datos = getIntent().getExtras();
+        Intent datos;
+        datos =  getIntent();
+
         if(datos!=null){
-           set_listar_pretamos_cliente(datos.getString("id_cliente"),datos.getString("id_usuario"));
+            cliente = (Cliente) datos.getSerializableExtra("cliente");
+         //  set_listar_pretamos_cliente(datos.getString("id_cliente"),datos.getString("id_usuario"));
+           set_listar_pretamos_cliente(cliente.getId(),cliente.getId_usuario());
         }
 
     }
@@ -292,6 +298,7 @@ public class listado_prestamo extends AppCompatActivity {
                // set_mensage("Desea realizar el pago?",p,9);
                 Intent lanzadera = new Intent(listado_prestamo.this,Pago.class);
                 lanzadera.putExtra("prestamo",p);
+                lanzadera.putExtra("cliente",cliente);
                 startActivity(lanzadera);
             }
         });
@@ -353,10 +360,7 @@ public class listado_prestamo extends AppCompatActivity {
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(opcion==0) {// opcion 0 para modificar
-                    File file = new File(p.getContrato_ruta());
-                    file.delete();
                     p.setContrato_ruta("");//limpio el ultimo contrato
-
                     set_proceso_refinanciamiento(p);
                     Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
                 }else if(opcion==1) {// lo elimino
@@ -380,7 +384,6 @@ public class listado_prestamo extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
 
     }
 
@@ -416,6 +419,7 @@ public class listado_prestamo extends AppCompatActivity {
                     tabla.setStretchAllColumns(true);
                     tabla.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
+
 
                     String[] titulos = {"FECVEN","FECPAGO","ESTADO","CUOTA","ATRAZO"};
 
@@ -503,7 +507,7 @@ public class listado_prestamo extends AppCompatActivity {
                     tabla.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                    String[] titulos = {"FECPAGO","MONTO","CAPIAMORT","INTAMORT"};
+                    String[] titulos = {"FECPAGO","MONTO","CAPAMORT","INTAMORT","RECIBO"};
 
                     TableRow ln_emcabezados = new TableRow(v.getContext());
                     ln_emcabezados.setBackgroundColor(Color.GREEN);
@@ -542,6 +546,22 @@ public class listado_prestamo extends AppCompatActivity {
                                         break;
                                     case 3:
                                         label.setText(""+Math.round(pago.getInteres_amortizado()));
+                                        break;
+                                    case 4:
+                                        if(!pago.getRecibo_rutta().isEmpty()){
+                                            Button bt = new Button(v.getContext());
+                                            bt.setText("*");
+                                            bt.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    PDF_MAnager manejador = new PDF_MAnager(listado_prestamo.this);
+                                                    manejador.set_abrir_documento(pago.getRecibo_rutta());
+                                                }
+                                            });
+
+                                            lnX2.addView(bt);
+                                        }
+
                                         break;
                                 }
 

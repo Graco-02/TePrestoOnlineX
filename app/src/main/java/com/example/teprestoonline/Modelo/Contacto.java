@@ -2,11 +2,12 @@ package com.example.teprestoonline.Modelo;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class Contacto {
+public class Contacto implements Serializable {
     private String id;
     private String fecha_alta_humana;
     private long fecha_alta_unix;

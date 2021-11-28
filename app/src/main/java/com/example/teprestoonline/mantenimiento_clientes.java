@@ -219,9 +219,13 @@ public class mantenimiento_clientes extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //codigo para listar los prestamos por cliente
-                Intent lanzadera = new Intent(mantenimiento_clientes.this,listado_prestamo.class);
+            /*    Intent lanzadera = new Intent(mantenimiento_clientes.this,listado_prestamo.class);
                 lanzadera.putExtra("id_cliente",cl.getId());
                 lanzadera.putExtra("id_usuario",cl.getId_usuario());
+                startActivity(lanzadera);*/
+
+                Intent lanzadera = new Intent(mantenimiento_clientes.this,listado_prestamo.class);
+                lanzadera.putExtra("cliente",cl);
                 startActivity(lanzadera);
             }
         });

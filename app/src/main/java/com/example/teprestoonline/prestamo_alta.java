@@ -319,6 +319,8 @@ public class prestamo_alta {
                     String nombre_contrato = p.getId()+"-"+new Fecha_utiliti().getFechaSystemaYYMMDD()+CT_PDF;
                     pdf_manager.set_proceso_generar_contrato(nombre_contrato , p , cliente);
                     p.setContrato_ruta(pdf_manager.getArchivo_pdf().getAbsolutePath().toString());
+                }else{
+                    p.setContrato_ruta("");
                 }
 
                 controlador_prestamo.set_prestamo(p);

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.teprestoonline.Modelo.Cliente;
+import com.example.teprestoonline.Modelo.Pago;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -30,6 +31,7 @@ public class PDF_MAnager {
     public static final String RUTA_ARCHIVOS_PDF = "/storage/emulated/0/TE_PRESTO_ONL/PDF";
     public static final String RUTA_ARCHIVOS_EST = "/storage/emulated/0/TE_PRESTO_ONL/ESTADOS";
     public static final String RUTA_CONTRATOS = "CONTRATOS";
+    public static final String RUTA_RECIBOS = "RECIBOS";
     public static final String RUTA_TE_PRESTO_ONL = "TE_PRESTO_ONL";
 
     private Document documento;
@@ -42,6 +44,8 @@ public class PDF_MAnager {
     private long hora = new  Fecha_utiliti().getTime();
     private Prestamo prestamo=null;
     private Cliente cliente=null;
+    private Pago mipago=null;
+
     private AppCompatActivity actividad;
 
     public PDF_MAnager(AppCompatActivity actividad){
@@ -246,6 +250,100 @@ public class PDF_MAnager {
             Toast.makeText(actividad, "No existe una aplicación para abrir el PDF"
                     , Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void set_proceso_generar_recibo(String nombre_archivo, Prestamo p, Cliente cliente, Pago mipago){
+        this.cliente = cliente;
+        this.prestamo = p;
+        archivo_nombre =  nombre_archivo;
+        this.mipago = mipago;
+
+        if(set_crear_archivo_recibo() ){
+            try {
+                documento = new Document(PageSize.A4);
+                escritor_pdf = PdfWriter.getInstance(documento, new FileOutputStream(archivo_pdf));
+                documento.open();
+                set_dato_to_archivo_recibo();
+                documento.close();
+            }catch (Exception e){
+                Log.e("abrir  escritor",e.toString());
+            }
+        }
+    }
+
+    private boolean set_crear_archivo_recibo(){
+        try {
+
+            File folder = new File(this.actividad.getExternalFilesDir(RUTA_TE_PRESTO_ONL),
+                    RUTA_RECIBOS);
+
+            if(!folder.exists()){
+                if(folder.mkdirs()){
+                    Toast.makeText(this.actividad,"CREADO "+folder.getAbsolutePath(),Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(this.actividad,"NO CREADO "+folder.getAbsolutePath(),Toast.LENGTH_LONG).show();
+                }
+            }
+
+            archivo_pdf = new File(folder,archivo_nombre);
+
+        }catch (Exception e){
+            Log.e("ERROR CREANDO ARCHIVO",e.toString());
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private boolean set_dato_to_archivo_recibo(){
+
+        try {
+
+            documento.addTitle("Recibo de pago");
+            documento.addSubject("Recibo");
+            documento.addAuthor("PrestamosApp");
+
+            double monto = 0;
+
+            parrafo = new Paragraph();
+
+            set_parrafo_hijo(new Paragraph("RECIBO DE PAGO NUMERO "+mipago.getId(),f_encabesado));
+            set_parrafo_hijo(new Paragraph(" ",f_encabesado));
+            set_parrafo_hijo(new Paragraph("FECHA " + new Fecha_utiliti().getFechaSystemaYYMMDD(),f_encabesado));
+
+            set_parrafo_hijo(new Paragraph(" ",f_encabesado));
+            set_parrafo_hijo(new Paragraph(" ",f_encabesado));
+
+            set_parrafo_hijo(new Paragraph("Certificamos que hemos recivido de parte del Sr@. "
+                    + cliente.getPersona().getNombres()+" , " +cliente.getPersona().getApellidos() + " la suma de "
+                    + mipago.getMonto_pagado() + " , " + new Numeros_a_letras().Convertir("" + mipago.getMonto_pagado() ,true)
+                    + " 00/100. con razon de pago del prestamo NO. " + prestamo.getId()
+                    + " correspondiente a un monto incial de " + prestamo.getMonto_financiado()
+                    + " " + new Numeros_a_letras().Convertir(""+prestamo.getMonto_financiado(),true)
+                    + " de el cual restan " + prestamo.getRestante() + " , "
+                    + new Numeros_a_letras().Convertir(""+prestamo.getRestante(),true)
+                    + " luego del pago realizado en el dia de hoy."
+                    ,f_encabesado));
+
+            documento.add(parrafo);
+            set_parrafo_hijo(new Paragraph(" ",f_encabesado));
+            set_parrafo_hijo(new Paragraph(" ",f_encabesado));
+            parrafo.setSpacingBefore(50);
+            parrafo.setSpacingAfter(50);
+
+            Paragraph parrafo_pie = new Paragraph();
+            parrafo_pie.add(new Paragraph("___________________________________________",f_encabesado));
+            parrafo_pie.add(new Paragraph("RECIBE",f_encabesado));
+            parrafo_pie.setAlignment(Element.ALIGN_JUSTIFIED);
+            set_parrafo_hijo(parrafo_pie);
+
+        } catch (DocumentException e) {
+            Log.e("ERROR AGREGANDO PARRAFO",e.toString());
+            return false;
+        }
+
+        return true;
     }
 
 }

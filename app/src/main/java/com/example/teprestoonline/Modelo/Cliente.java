@@ -2,11 +2,13 @@ package com.example.teprestoonline.Modelo;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class Cliente{
+@SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
+public class Cliente implements Serializable {
 
     private String id_usuario;
     private int puntuaje;

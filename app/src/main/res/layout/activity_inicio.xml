@@ -30,7 +30,6 @@
                 android:layout_weight="1"
                 android:gravity="bottom"
                 android:text="Te Presto Online"
-                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/white"
                 android:textSize="24sp"

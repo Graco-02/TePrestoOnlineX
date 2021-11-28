@@ -1,23 +1,13 @@
 package com.example.teprestoonline.Controladores;
 
-
-import android.widget.Toast;
-
 import com.example.teprestoonline.Modelo.Pago;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
-import com.example.teprestoonline.listado_prestamo;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
-
-import androidx.annotation.NonNull;
 
 public class Prestamo_ctr {
 
