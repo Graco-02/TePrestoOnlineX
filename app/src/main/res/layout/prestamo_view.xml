@@ -322,16 +322,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/prestamo_view_restante"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:inputType="numberSigned"
-                        android:text="0"
-                        android:textAlignment="center" />
-
                     <TextView
                         android:id="@+id/textView17"
                         android:layout_width="match_parent"
@@ -341,6 +331,16 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/prestamo_view_restante"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:inputType="numberSigned"
+                        android:text="0"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
 
@@ -495,6 +495,7 @@
                             android:orientation="vertical" />
                     </ScrollView>
                 </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

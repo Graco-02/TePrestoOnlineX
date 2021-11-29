@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -54,6 +55,7 @@ public class listado_prestamo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_prestamo);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         listado = (LinearLayout) findViewById(R.id.listado_prestamos_lista);
 
@@ -101,36 +103,6 @@ public class listado_prestamo extends AppCompatActivity {
             }
         });
     }
-
-    private void set_listar_pretamos_cliente(String id_usuario){
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME);
-        final Query usuQuery = ref.orderByChild("id_usuario").equalTo(id_usuario);
-
-        usuQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listado.removeAllViews(); //limpio el conrtenedor
-                if(dataSnapshot.exists()) {
-                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
-                        if(hijo.getValue(Prestamo.class).getId_usuario().equalsIgnoreCase(id_usuario)) {
-                            Prestamo p = hijo.getValue(Prestamo.class);
-                            listado.addView(get_prestamo_view(p));
-                        }
-                    }
-                }else{
-                    listado.removeAllViews(); //limpio el conrtenedor
-                    Toast.makeText(listado_prestamo.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
 
     protected View get_prestamo_view(Prestamo p){
         LayoutInflater inflater = getLayoutInflater();
@@ -350,7 +322,7 @@ public class listado_prestamo extends AppCompatActivity {
         if(p.getTipo()==1){
             new Prestamo_ctr().set_proceso_amortizaciones(p);
         }
-        set_listar_pretamos_cliente(p.getId_cliente(),p.getId_usuario());
+      //  set_listar_pretamos_cliente(p.getId_cliente(),p.getId_usuario());
     }
 
     private void set_mensage(String mensaje,Prestamo p,int opcion){

@@ -20,11 +20,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.teprestoonline.Controladores.Parametros_ctr;
 import com.example.teprestoonline.Controladores.Prestamo_ctr;
 import com.example.teprestoonline.Controladores.Usuario_ctr;
+import com.example.teprestoonline.Modelo.Parametros;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Usuario;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
+import com.example.teprestoonline.utilidades.Fecha_utiliti;
 import com.example.teprestoonline.utilidades.Proceso_cobro;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +42,8 @@ public class Inicio extends AppCompatActivity {
 
     private Usuario usu;
     public static boolean procesado=false;
+    public final String RUTA_PARAMETROS = "parametros";
+    public static  Parametros parametros;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,7 @@ public class Inicio extends AppCompatActivity {
             TextView txt_pie;
             txt_pie = (TextView) findViewById(R.id.inicio_pie);
             txt_pie.setText("Saludos Sr. " + Usuario.usuario_logueado.getUsuario());
+            set_parametros();
         }
 
     }
@@ -104,6 +110,7 @@ public class Inicio extends AppCompatActivity {
 
                 break;
             case R.id.inicio_parametro:
+                new parametros_matenimiento(this,parametros);
                 break;
 
             case R.id.inicio_usuario:
@@ -126,13 +133,20 @@ public class Inicio extends AppCompatActivity {
         LinearLayout ln = (LinearLayout) findViewById(R.id.inicio_proceso_view);
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               if(procesado==false){
-                   ln.setVisibility(View.VISIBLE);
-                   set_proceso_cobro();
-                   dialog.dismiss();
-                   procesado=true;
+               if(parametros.getFecultcobro()=="0001-01-01"
+                       || new Fecha_utiliti().get_fecha_numerica(parametros.getFecultcobro())
+                       < new Fecha_utiliti().get_fecha_numerica(new Fecha_utiliti().getFechaSystemaYYMMDD())
+               ) {
+                   if (procesado == false) {
+                       ln.setVisibility(View.VISIBLE);
+                       set_proceso_cobro();
+                       dialog.dismiss();
+                       procesado = true;
+                   } else {
+                       Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
+                   }
                }else{
-                   Toast.makeText(Inicio.this,"El proceso ya habia sido lanzado",Toast.LENGTH_LONG).show();
+                   Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
                }
             }
         });
@@ -186,23 +200,22 @@ public class Inicio extends AppCompatActivity {
         });
     }
 
-    private void set_amortizaciones(Prestamo p){
-        ArrayList<amortizacion_cuota> lista_amortizaciones =  new ArrayList<>();
+
+    private void set_parametros(){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME2).child(p.getId());
-        final Query usuQuery = ref.orderByChild("fecha_alta_unix");
-        usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference ref = database.child(RUTA_PARAMETROS).child(Usuario.usuario_logueado.getId());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
-                        if(hijo.getValue(amortizacion_cuota.class).getId_prestamo().equalsIgnoreCase(p.getId())) {
-                            amortizacion_cuota amortz = hijo.getValue(amortizacion_cuota.class);
-                            lista_amortizaciones.add(amortz);
+                        if(hijo.getValue(Parametros.class).getId_usuario().equalsIgnoreCase(Usuario.usuario_logueado.getId())) {
+                            Parametros parametros = hijo.getValue(Parametros.class);
+                            Inicio.this.parametros = parametros;
                         }
                     }
                 }else{
-                   // Toast.makeText(Inicio.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
+                    // Toast.makeText(Inicio.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
                 }
             }
 

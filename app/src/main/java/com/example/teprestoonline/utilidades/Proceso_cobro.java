@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Prestamo_ctr;
 
+import com.example.teprestoonline.Inicio;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
 import com.example.teprestoonline.R;
@@ -48,7 +49,14 @@ public class Proceso_cobro {
             dias_transcurridos = get_dias_trascurridos2(p.getFecha_alta_humana().substring(0,10));
         }
 
-        if (dias_transcurridos > 0 && dias_transcurridos >= p.getPeriodo()){
+        if(p.getPeriodo()==1){
+            dias_transcurridos = dias_transcurridos +1;
+        }
+
+      //  if (dias_transcurridos > 0 && dias_transcurridos >= p.getPeriodo()){
+        if (dias_transcurridos > 0 //valido que el perido sea mayor a el tope mas los dias de gracia
+                && dias_transcurridos >= (p.getPeriodo() + Inicio.parametros.getDias_gracia())
+        ){
             TextView label = new TextView(this.applicationContext);
             TextView label2 = new TextView(this.applicationContext);
             TextView label3 = new TextView(this.applicationContext);
@@ -127,13 +135,16 @@ public class Proceso_cobro {
                                     //al momento del pago se presentara el monto en atrazo por igual al listar las amortizaciones
                                     dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
 
-                                    double nuevo_interes = amorizacion.getInteres();
-                                    double interes_generado = set_proceso_cuota_en_atrazo(amorizacion.getInteres(),
-                                            amorizacion.getCapital(),p,dias_transcurridos);
-                                    nuevo_interes += interes_generado;
-                                    amorizacion.setInteres(nuevo_interes);
+                                    if(dias_transcurridos > Inicio.parametros.getDias_gracia()) {
+                                        double nuevo_interes = amorizacion.getInteres();
+                                        double interes_generado = set_proceso_cuota_en_atrazo(amorizacion.getInteres(),
+                                                amorizacion.getCapital(), p, dias_transcurridos);
+                                        nuevo_interes += interes_generado;
+                                        amorizacion.setInteres(nuevo_interes);
 
-                                    p.setRestante(p.getRestante()+interes_generado);// sumo los intereses generados al restante
+                                        p.setRestante(p.getRestante() + interes_generado);// sumo los intereses generados al restante
+                                    }
+
                                     new Prestamo_ctr().set_prestamo(p); //actualizo los datos del prestamo
                                 }
 
