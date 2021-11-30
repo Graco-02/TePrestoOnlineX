@@ -135,7 +135,7 @@ public class Proceso_cobro {
                                     //al momento del pago se presentara el monto en atrazo por igual al listar las amortizaciones
                                     dias_transcurridos = get_dias_trascurridos2(amorizacion.getFecha_cuota());
 
-                                    if(dias_transcurridos > Inicio.parametros.getDias_gracia()) {
+                                    if(dias_transcurridos > Inicio.parametros.getDias_gracia() ) {
                                         double nuevo_interes = amorizacion.getInteres();
                                         double interes_generado = set_proceso_cuota_en_atrazo(amorizacion.getInteres(),
                                                 amorizacion.getCapital(), p, dias_transcurridos);
@@ -144,7 +144,6 @@ public class Proceso_cobro {
 
                                         p.setRestante(p.getRestante() + interes_generado);// sumo los intereses generados al restante
                                     }
-
                                     new Prestamo_ctr().set_prestamo(p); //actualizo los datos del prestamo
                                 }
 

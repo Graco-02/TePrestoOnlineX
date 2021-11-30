@@ -107,7 +107,7 @@ public class Inicio extends AppCompatActivity {
                 startActivity(lanzadera);
                 break;
             case R.id.inicio_reporte:
-
+                new estadisticas_pruebas(this);
                 break;
             case R.id.inicio_parametro:
                 new parametros_matenimiento(this,parametros);
@@ -142,10 +142,14 @@ public class Inicio extends AppCompatActivity {
                        set_proceso_cobro();
                        dialog.dismiss();
                        procesado = true;
+                       parametros.setFecultcobro(new Fecha_utiliti().getFechaSystemaYYMMDD());
+                       new Parametros_ctr(getApplicationContext()).set_parametros(parametros);
                    } else {
+                       ln.setVisibility(View.GONE);
                        Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
                    }
                }else{
+                   ln.setVisibility(View.GONE);
                    Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
                }
             }

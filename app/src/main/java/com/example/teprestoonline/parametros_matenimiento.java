@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Parametros_ctr;
 import com.example.teprestoonline.Modelo.Dispositivos_bluethoo;
@@ -60,39 +61,41 @@ public class parametros_matenimiento {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 if(parametros==null){
+                 if(parametros==null) {
                      Parametros parametros = new Parametros();
-                     parametros.set_datos_ultima_modificaion(activiti);
                      parametros.set_datos_unicos(activiti);
                      parametros.setId_usuario(Usuario.usuario_logueado.getId());
+                 }
 
-                     try{
-                         parametros.setDias_gracia(Integer.parseInt(txt_diasgracia.getText().toString()));
-                         parametros.setFecultcobro(txt_fecultcob.getText().toString());
-                         parametros.setPts_ganar(Integer.parseInt(txt_ptsganar.getText().toString()));
-                         parametros.setPts_perder(Integer.parseInt(txt_ptsperder.getText().toString()));
+                 parametros.set_datos_ultima_modificaion(activiti);
 
-                         for(int i = 0;i<listado_dispositivos.size();i++){ //obtengo los datos del dispositivo BT
-                             if(listado_dispositivos.get(i).getNombre().equals( spinner.getSelectedItem().toString())){
-                                 parametros.setDispo_bt_nombre(listado_dispositivos.get(i).getNombre());
-                                 parametros.setDispo_bt_mac(listado_dispositivos.get(i).getMac());
-                             }
+                 try{
+                     parametros.setDias_gracia(Integer.parseInt(txt_diasgracia.getText().toString()));
+                     parametros.setFecultcobro(txt_fecultcob.getText().toString());
+                     parametros.setPts_ganar(Integer.parseInt(txt_ptsganar.getText().toString()));
+                     parametros.setPts_perder(Integer.parseInt(txt_ptsperder.getText().toString()));
+
+                     for(int i = 0;i<listado_dispositivos.size();i++){ //obtengo los datos del dispositivo BT
+                         if(listado_dispositivos.get(i).getNombre().equals( spinner.getSelectedItem().toString())){
+                             parametros.setDispo_bt_nombre(listado_dispositivos.get(i).getNombre());
+                             parametros.setDispo_bt_mac(listado_dispositivos.get(i).getMac());
                          }
-
-                         if(parametros.getDispo_bt_nombre().isEmpty()){
-                             parametros.setDispo_bt_mac("");
-                         }
-                         if(parametros.getDispo_bt_nombre().isEmpty()){
-                             parametros.setDispo_bt_nombre("");
-                         }
-
-                         new Parametros_ctr(activiti).set_parametros(parametros);//guardo o modifico los parametros
-
-                     }catch (NumberFormatException numfecp){
-
                      }
+
+                     if(parametros.getDispo_bt_nombre().isEmpty()){
+                         parametros.setDispo_bt_mac("");
+                     }
+                     if(parametros.getDispo_bt_nombre().isEmpty()){
+                         parametros.setDispo_bt_nombre("");
+                     }
+
+                     new Parametros_ctr(activiti).set_parametros(parametros);//guardo o modifico los parametros
+                     Toast.makeText(activiti, "Realizado", Toast.LENGTH_SHORT).show();
+                 }catch (NumberFormatException numfecp){
+                     Toast.makeText(activiti, "ERROR"+numfecp.getMessage().toString(), Toast.LENGTH_SHORT).show();
                  }
             }
+
         });
   
         Button salir = (Button) v.findViewById(R.id.parametros_bt_salir);
