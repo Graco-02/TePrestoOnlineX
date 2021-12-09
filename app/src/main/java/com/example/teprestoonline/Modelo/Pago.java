@@ -151,7 +151,7 @@ public class Pago {
         setId(UUID.randomUUID().toString());
         Calendar calendario =  Calendar.getInstance();
         setFecha_alta_unix((calendario.getTimeInMillis() * -1));
-        setFecha_modificacion_unix((calendario.getTimeInMillis() * -1));
+        setFecha_modificacion_unix((calendario.getTimeInMillis() ));
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = df.format(calendario.getTime());

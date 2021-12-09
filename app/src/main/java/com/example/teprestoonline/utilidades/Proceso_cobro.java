@@ -114,7 +114,7 @@ public class Proceso_cobro {
                         double fecha_dia_num = gestor_fechas.get_fecha_numerica(fecha_dia);
                         double fecha_cuota_num = gestor_fechas.get_fecha_numerica(amorizacion.getFecha_cuota());
                         int nuevo_estado = 0;
-                        int dias_transcurridos_act = 0;
+                        int dias_transcurridos_act = 0; //fias transcurridos ultima actualizacion
                         int dias_transcurridos = 0;
 
                         if(!amorizacion.getFecha_modificacion_humana().substring(0, 10).equals(amorizacion.getFecha_alta_humana().substring(0, 10))) {
@@ -125,7 +125,8 @@ public class Proceso_cobro {
                             dias_transcurridos_act = 1;
                         }
 
-                        if(fecha_dia_num >= fecha_cuota_num && amorizacion.getEstado() != 2 && dias_transcurridos_act > 0) {
+                      //  if(fecha_dia_num >= fecha_cuota_num && amorizacion.getEstado() != 2 && dias_transcurridos_act > 0) {
+                        if(fecha_dia_num >= fecha_cuota_num && amorizacion.getEstado() != 2 ) {
                                 if (fecha_dia_num == fecha_cuota_num ) {
                                     nuevo_estado=0;//cuota caida
                                 } else if (fecha_dia_num > fecha_cuota_num) {
@@ -150,6 +151,8 @@ public class Proceso_cobro {
                             if(nuevo_estado != amorizacion.getEstado()) {
                                 amorizacion.setEstado(nuevo_estado);
                                 amorizacion.set_datos_ultima_modificaion();
+                                p.setFecha_ult_cobro(new Fecha_utiliti().getFechaSystemaYYMMDD());
+                                new Prestamo_ctr().set_prestamo(p);
 
                                 TextView label = new TextView(applicationContext);
                                 TextView label2 = new TextView(applicationContext);
@@ -258,6 +261,8 @@ public class Proceso_cobro {
         System.out.println("DIAS EN ATRAZO . >" +dias_atrazo );
         for (int i=0;i<=dias_atrazo;i++){
             nuevo_interes += get_interes_cuota(p,cuota);
+            System.out.println("Interes ("+i+") " + get_interes_cuota(p,cuota) );
+            System.out.println("nuevo_interes ("+i+") " + nuevo_interes );
         }
 
         return nuevo_interes;

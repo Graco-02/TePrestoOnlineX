@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_prestamos_view__pagos"
+        android:icon="@drawable/pago1"
+        android:title="Pagos"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_prestamos_view_pagos_hist"
+        android:title="Historial pagos" />
+    <item
+        android:id="@+id/u_prestamos_view_eliminar"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Eliminar"
+        app:showAsAction="always" />
+</menu>

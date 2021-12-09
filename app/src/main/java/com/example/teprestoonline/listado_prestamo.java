@@ -2,19 +2,17 @@ package com.example.teprestoonline;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.graphics.pdf.PdfDocument;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,11 +25,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.teprestoonline.Controladores.Cliente_ctr;
 import com.example.teprestoonline.Controladores.Prestamo_ctr;
 import com.example.teprestoonline.Modelo.Cliente;
 import com.example.teprestoonline.Modelo.Prestamo;
-import com.example.teprestoonline.Modelo.Usuario;
 import com.example.teprestoonline.Modelo.amortizacion_cuota;
 import com.example.teprestoonline.utilidades.PDF_MAnager;
 import com.google.firebase.database.DataSnapshot;
@@ -41,9 +37,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.teprestoonline.R.*;
 
 public class listado_prestamo extends AppCompatActivity {
 
@@ -54,24 +51,25 @@ public class listado_prestamo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listado_prestamo);
+        setContentView(layout.activity_listado_prestamo);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        listado = (LinearLayout) findViewById(R.id.listado_prestamos_lista);
+        listado = (LinearLayout) findViewById(id.listado_prestamos_lista);
 
-      //  Bundle datos = getIntent().getExtras();
+
+        //  Bundle datos = getIntent().getExtras();
         Intent datos;
-        datos =  getIntent();
+        datos = getIntent();
 
-        if(datos!=null){
+        if (datos != null) {
             cliente = (Cliente) datos.getSerializableExtra("cliente");
-         //  set_listar_pretamos_cliente(datos.getString("id_cliente"),datos.getString("id_usuario"));
-           set_listar_pretamos_cliente(cliente.getId(),cliente.getId_usuario());
+            //  set_listar_pretamos_cliente(datos.getString("id_cliente"),datos.getString("id_usuario"));
+            set_listar_pretamos_cliente(cliente.getId(), cliente.getId_usuario());
         }
 
     }
 
-    private void set_listar_pretamos_cliente(String id_cliente,String id_usuario){
+    private void set_listar_pretamos_cliente(String id_cliente, String id_usuario) {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME);
         final Query usuQuery = ref.orderByChild("id_cliente").equalTo(id_cliente);
@@ -79,10 +77,10 @@ public class listado_prestamo extends AppCompatActivity {
         usuQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     listado.removeAllViews(); //limpio el conrtenedor
-                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
-                        if(
+                    for (DataSnapshot hijo : dataSnapshot.getChildren()) {
+                        if (
                                 hijo.getValue(Prestamo.class).getId_cliente().equalsIgnoreCase(id_cliente)
                                         &&
                                         hijo.getValue(Prestamo.class).getId_usuario().equalsIgnoreCase(id_usuario)
@@ -91,9 +89,9 @@ public class listado_prestamo extends AppCompatActivity {
                             listado.addView(get_prestamo_view(p));
                         }
                     }
-                }else{
+                } else {
                     listado.removeAllViews(); //limpio el conrtenedor
-                    Toast.makeText(listado_prestamo.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
+                    Toast.makeText(listado_prestamo.this, "No se encontraron datos", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -104,28 +102,29 @@ public class listado_prestamo extends AppCompatActivity {
         });
     }
 
-    protected View get_prestamo_view(Prestamo p){
+    protected View get_prestamo_view(Prestamo p) {
         LayoutInflater inflater = getLayoutInflater();
-        View v = inflater.inflate(R.layout.prestamo_view, null);
+        View v = inflater.inflate(layout.prestamo_view, null);
 
-        EditText txt_tipo = (EditText) v.findViewById(R.id.prestamo_view_tipo);
-        EditText txt_fecalta = (EditText) v.findViewById(R.id.prestamo_view_fecalta);
-        EditText txt_montofin = (EditText) v.findViewById(R.id.prestamo_view_monto_financiado);
-        EditText txt_tasa = (EditText) v.findViewById(R.id.prestamo_view_tasa);
-        EditText txt_cantcuorest = (EditText) v.findViewById(R.id.prestamo_view_cantcuorest);
-        EditText txt_cantcuototal = (EditText) v.findViewById(R.id.prestamo_view_cantcuo);
-        EditText txt_cuota = (EditText) v.findViewById(R.id.prestamo_view_cuota);
-        EditText txt_restante = (EditText) v.findViewById(R.id.prestamo_view_restante);
-        EditText txt_fecultcob = (EditText) v.findViewById(R.id.prestamo_view_fecultcobro);
-        EditText txt_fecultpag = (EditText) v.findViewById(R.id.prestamo_view_fecultpago);
-        EditText txt_por_atrz = (EditText) v.findViewById(R.id.prestamo_view_porct_atrazo);
-        EditText txt_mont_atrz = (EditText) v.findViewById(R.id.prestamo_view_mnt_fijo_atraz);
 
-        Spinner selector_perido = (Spinner) v.findViewById(R.id.prestamo_view_periodo);
+        EditText txt_tipo = (EditText) v.findViewById(id.prestamo_view_tipo);
+        EditText txt_fecalta = (EditText) v.findViewById(id.prestamo_view_fecalta);
+        EditText txt_montofin = (EditText) v.findViewById(id.prestamo_view_monto_financiado);
+        EditText txt_tasa = (EditText) v.findViewById(id.prestamo_view_tasa);
+        EditText txt_cantcuorest = (EditText) v.findViewById(id.prestamo_view_cantcuorest);
+        EditText txt_cantcuototal = (EditText) v.findViewById(id.prestamo_view_cantcuo);
+        EditText txt_cuota = (EditText) v.findViewById(id.prestamo_view_cuota);
+        EditText txt_restante = (EditText) v.findViewById(id.prestamo_view_restante);
+        EditText txt_fecultcob = (EditText) v.findViewById(id.prestamo_view_fecultcobro);
+        EditText txt_fecultpag = (EditText) v.findViewById(id.prestamo_view_fecultpago);
+        EditText txt_por_atrz = (EditText) v.findViewById(id.prestamo_view_porct_atrazo);
+        EditText txt_mont_atrz = (EditText) v.findViewById(id.prestamo_view_mnt_fijo_atraz);
+
+        Spinner selector_perido = (Spinner) v.findViewById(id.prestamo_view_periodo);
         selector_perido.setAdapter(proceso_spiner());
         selector_perido.setEnabled(false);
 
-        switch (p.getPeriodo()){
+        switch (p.getPeriodo()) {
             case 1:
                 selector_perido.setSelection(0);
                 break;
@@ -141,33 +140,33 @@ public class listado_prestamo extends AppCompatActivity {
         }
 
         txt_fecalta.setText(p.getFecha_alta_humana());
-        txt_montofin.setText(""+p.getMonto_financiado());
-        txt_tasa.setText(""+p.getTasa());
-        txt_cantcuorest.setText(""+p.getCantida_cuotas_restantes());
-        txt_cantcuototal.setText(""+p.getCantidad_cuotas());
-        txt_cuota.setText(""+Math.round(p.getCuota()));
-        txt_restante.setText(""+p.getRestante());
-        txt_fecultcob.setText(""+p.getFecha_ult_cobro());
-        txt_fecultpag.setText(""+p.getFecha_ult_pago());
-        txt_mont_atrz.setText(""+p.getMonto_fijo());
-        txt_por_atrz.setText(""+p.getPorcentage_atrazo());
+        txt_montofin.setText("" + p.getMonto_financiado());
+        txt_tasa.setText("" + p.getTasa());
+        txt_cantcuorest.setText("" + p.getCantida_cuotas_restantes());
+        txt_cantcuototal.setText("" + p.getCantidad_cuotas());
+        txt_cuota.setText("" + Math.round(p.getCuota()));
+        txt_restante.setText("" + p.getRestante());
+        txt_fecultcob.setText("" + p.getFecha_ult_cobro());
+        txt_fecultpag.setText("" + p.getFecha_ult_pago());
+        txt_mont_atrz.setText("" + p.getMonto_fijo());
+        txt_por_atrz.setText("" + p.getPorcentage_atrazo());
 
 
-        ImageButton bt_modificar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_modficar);
-        ImageButton bt_pagar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_pagar);
-        ImageButton bt_eliminar = (ImageButton) v.findViewById(R.id.prestamo_view_bt_eliminar);
-        ImageButton bt_listar_amortiz = (ImageButton) v.findViewById(R.id.prestamo_view_bt_listar_amort);
-        ImageButton bt_ver_contrato = (ImageButton) v.findViewById(R.id.prestamo_vie_bt_contrato);
-        Button bt_hist_pagos = (Button) v.findViewById(R.id.prestamo_view_hist_pagos);
+        ImageButton bt_modificar = (ImageButton) v.findViewById(id.prestamo_view_bt_modficar);
+        ImageButton bt_pagar = (ImageButton) v.findViewById(id.prestamo_view_bt_pagar);
+        ImageButton bt_eliminar = (ImageButton) v.findViewById(id.prestamo_view_bt_eliminar);
+        ImageButton bt_listar_amortiz = (ImageButton) v.findViewById(id.prestamo_view_bt_listar_amort);
+        ImageButton bt_ver_contrato = (ImageButton) v.findViewById(id.prestamo_vie_bt_contrato);
+        Button bt_hist_pagos = (Button) v.findViewById(id.prestamo_view_hist_pagos);
 
-        if(!p.getContrato_ruta().isEmpty()){
+        if (!p.getContrato_ruta().isEmpty()) {
             bt_ver_contrato.setVisibility(View.VISIBLE);
         }
 
-        LinearLayout ln_listado_amor = (LinearLayout) v.findViewById(R.id.prestamo_view_amorizaciones);
-        LinearLayout ln_datos_cuotas = (LinearLayout) v.findViewById(R.id.prestamo_view_datos_cuotas);
+        LinearLayout ln_listado_amor = (LinearLayout) v.findViewById(id.prestamo_view_amorizaciones);
+        LinearLayout ln_datos_cuotas = (LinearLayout) v.findViewById(id.prestamo_view_datos_cuotas);
 
-        switch (p.getTipo()){
+        switch (p.getTipo()) {
             case 0:
                 txt_tipo.setText("REGULAR");
                 break;
@@ -181,7 +180,7 @@ public class listado_prestamo extends AppCompatActivity {
         bt_modificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!txt_montofin.isEnabled()) {
+                if (!txt_montofin.isEnabled()) {
                     txt_montofin.setEnabled(true);
                     txt_tasa.setEnabled(true);
                     txt_cantcuorest.setEnabled(true);
@@ -191,12 +190,12 @@ public class listado_prestamo extends AppCompatActivity {
                     selector_perido.setEnabled(true);
                     txt_mont_atrz.setEnabled(true);
                     txt_por_atrz.setEnabled(true);
-                }else{
+                } else {
                     //seteo los valores del formulario a la instancia del prestamo para modificar
                     p.setTasa(Integer.parseInt(txt_tasa.getText().toString()));
                     p.setRestante(Double.parseDouble(txt_restante.getText().toString()));
                     p.setMonto_financiado(Double.parseDouble(txt_montofin.getText().toString()));
-                    switch (selector_perido.getSelectedItemPosition()){
+                    switch (selector_perido.getSelectedItemPosition()) {
                         case 0:
                             p.setPeriodo(1);
                             break;
@@ -213,23 +212,23 @@ public class listado_prestamo extends AppCompatActivity {
                     p.setFecha_ult_pago(txt_fecultpag.getText().toString());
                     p.setFecha_ult_cobro(txt_fecultcob.getText().toString());
 
-                    if(p.getTipo()==1){
+                    if (p.getTipo() == 1) {
                         p.setCantida_cuotas_restantes(Integer.parseInt(txt_cantcuorest.getText().toString()));
                         p.setCantidad_cuotas(Integer.parseInt(txt_cantcuototal.getText().toString()));
-                        if(!txt_por_atrz.getText().toString().isEmpty()) {
+                        if (!txt_por_atrz.getText().toString().isEmpty()) {
                             p.setPorcentage_atrazo(Integer.parseInt(txt_por_atrz.getText().toString()));
-                        }else{
+                        } else {
                             p.setPorcentage_atrazo(0);
                         }
 
-                        if(!txt_mont_atrz.getText().toString().isEmpty()) {
+                        if (!txt_mont_atrz.getText().toString().isEmpty()) {
                             p.setMonto_fijo(Integer.parseInt(txt_mont_atrz.getText().toString()));
-                        }else{
+                        } else {
                             p.setMonto_fijo(0);
                         }
                     }
 
-                    set_mensage("esta seguro de realizar los cambios?",p,0);
+                    set_mensage("esta seguro de realizar los cambios?", p, 0);
                     txt_montofin.setEnabled(false);
                     txt_tasa.setEnabled(false);
                     txt_cantcuorest.setEnabled(false);
@@ -248,29 +247,29 @@ public class listado_prestamo extends AppCompatActivity {
         bt_eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                set_mensage("Esta seguro de eliminar el registro?",p,1);
+                set_mensage("Esta seguro de eliminar el registro?", p, 1);
             }
         });
 
         bt_listar_amortiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if(ln_listado_amor.getVisibility() == View.VISIBLE){
-                   ln_listado_amor.setVisibility(View.GONE);
-               }else {
-                   set_listado_amortizaciones(p, v);
-                   ln_listado_amor.setVisibility(View.VISIBLE);
-               }
+                if (ln_listado_amor.getVisibility() == View.VISIBLE) {
+                    ln_listado_amor.setVisibility(View.GONE);
+                } else {
+                    set_listado_amortizaciones(p, v);
+                    ln_listado_amor.setVisibility(View.VISIBLE);
+                }
             }
         });
 
         bt_pagar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // set_mensage("Desea realizar el pago?",p,9);
-                Intent lanzadera = new Intent(listado_prestamo.this,Pago.class);
-                lanzadera.putExtra("prestamo",p);
-                lanzadera.putExtra("cliente",cliente);
+                // set_mensage("Desea realizar el pago?",p,9);
+                Intent lanzadera = new Intent(listado_prestamo.this, Pago.class);
+                lanzadera.putExtra("prestamo", p);
+                lanzadera.putExtra("cliente", cliente);
                 startActivity(lanzadera);
             }
         });
@@ -278,10 +277,10 @@ public class listado_prestamo extends AppCompatActivity {
         bt_hist_pagos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ln_listado_amor.getVisibility() == View.VISIBLE){
+                if (ln_listado_amor.getVisibility() == View.VISIBLE) {
                     ln_listado_amor.setVisibility(View.GONE);
-                }else {
-                    set_listado_pagos(p,v);
+                } else {
+                    set_listado_pagos(p, v);
                     ln_listado_amor.setVisibility(View.VISIBLE);
                 }
             }
@@ -300,18 +299,18 @@ public class listado_prestamo extends AppCompatActivity {
         return v;
     }
 
-    private void set_proceso_refinanciamiento(Prestamo p){
+    private void set_proceso_refinanciamiento(Prestamo p) {
         new Prestamo_ctr().set_eliminar(p);//elimino el prestamo anterior y refinancio
-        if(p.getTipo()==1){
+        if (p.getTipo() == 1) {
             p.setTipo(1); // tipo 1 = Cuotas
 
             double monto = p.getMonto_financiado();
-            double tasa = Double.parseDouble(""+p.getTasa()) / 100 ;
+            double tasa = Double.parseDouble("" + p.getTasa()) / 100;
             int ganancia = Integer.parseInt(String.valueOf(Math.round((monto * tasa))));
             double restante = monto + ganancia;
-            double cuota = Math.round( restante  / p.getCantidad_cuotas() );
-            double interes_cuota = (double) (ganancia) / p.getCantidad_cuotas() ;
-            double capital_cuota =  (double) (monto) / p.getCantidad_cuotas();
+            double cuota = Math.round(restante / p.getCantidad_cuotas());
+            double interes_cuota = (double) (ganancia) / p.getCantidad_cuotas();
+            double capital_cuota = (double) (monto) / p.getCantidad_cuotas();
 
             p.setInteres_cuota(interes_cuota);
             p.setCapital_cuota(capital_cuota);
@@ -319,28 +318,28 @@ public class listado_prestamo extends AppCompatActivity {
             p.setRestante(restante);
         }
         new Prestamo_ctr().set_prestamo(p);
-        if(p.getTipo()==1){
+        if (p.getTipo() == 1) {
             new Prestamo_ctr().set_proceso_amortizaciones(p);
         }
-      //  set_listar_pretamos_cliente(p.getId_cliente(),p.getId_usuario());
+        //  set_listar_pretamos_cliente(p.getId_cliente(),p.getId_usuario());
     }
 
-    private void set_mensage(String mensaje,Prestamo p,int opcion){
+    private void set_mensage(String mensaje, Prestamo p, int opcion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(listado_prestamo.this);
         builder.setTitle("Notificacion ");
         builder.setMessage(mensaje);
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                if(opcion==0) {// opcion 0 para modificar
+                if (opcion == 0) {// opcion 0 para modificar
                     p.setContrato_ruta("");//limpio el ultimo contrato
                     set_proceso_refinanciamiento(p);
-                    Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
-                }else if(opcion==1) {// lo elimino
+                    Toast.makeText(listado_prestamo.this, "Correcto", Toast.LENGTH_LONG).show();
+                } else if (opcion == 1) {// lo elimino
                     new Prestamo_ctr().set_eliminar(p);
-                    Toast.makeText(listado_prestamo.this,"Correcto",Toast.LENGTH_LONG).show();
-                }else if(opcion==9) {// Mando el pago
-                    Intent lanzadera = new Intent(listado_prestamo.this,Pago.class);
-                    lanzadera.putExtra("prestamo",p);
+                    Toast.makeText(listado_prestamo.this, "Correcto", Toast.LENGTH_LONG).show();
+                } else if (opcion == 9) {// Mando el pago
+                    Intent lanzadera = new Intent(listado_prestamo.this, Pago.class);
+                    lanzadera.putExtra("prestamo", p);
                     startActivity(lanzadera);
                 }
 
@@ -359,33 +358,33 @@ public class listado_prestamo extends AppCompatActivity {
 
     }
 
-    private ArrayAdapter<String> proceso_spiner(){
+    private ArrayAdapter<String> proceso_spiner() {
         //lleno el combo tipos de documentos
-        List<String> tipos_documento = new ArrayList<String>();
-        tipos_documento.add("DIARIO");
-        tipos_documento.add("SEMANAL");
-        tipos_documento.add("QUINCENAL");
-        tipos_documento.add("MENSUAL");
+        List<String> tipos_periodos = new ArrayList<String>();
+        tipos_periodos.add("DIARIO");
+        tipos_periodos.add("SEMANAL");
+        tipos_periodos.add("QUINCENAL");
+        tipos_periodos.add("MENSUAL");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(listado_prestamo.this,
-                android.R.layout.simple_spinner_item, tipos_documento);
+                android.R.layout.simple_spinner_item, tipos_periodos);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return dataAdapter;
     }
 
-    private void set_listado_amortizaciones(Prestamo p,View v){
+    private void set_listado_amortizaciones(Prestamo p, View v) {
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME2).child(p.getId());
         final Query usuQuery = ref.orderByChild("fecha_alta_unix");
-        LinearLayout listado_amorizaciones = (LinearLayout) v.findViewById(R.id.prestamo_view_lista_amortizaciones);
-        TextView encabezado = (TextView) v.findViewById(R.id.prestamo_view_amortizaciones_encabezado);
+        LinearLayout listado_amorizaciones = (LinearLayout) v.findViewById(id.prestamo_view_lista_amortizaciones);
+        TextView encabezado = (TextView) v.findViewById(id.prestamo_view_amortizaciones_encabezado);
         encabezado.setText("AMORTIZACIONES");
 
         usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     listado_amorizaciones.removeAllViews();//limpio el contenedor
                     TableLayout tabla = new TableLayout(v.getContext());
                     tabla.setStretchAllColumns(true);
@@ -393,32 +392,32 @@ public class listado_prestamo extends AppCompatActivity {
                             LinearLayout.LayoutParams.WRAP_CONTENT));
 
 
-                    String[] titulos = {"FECVEN","FECPAGO","ESTADO","CUOTA","ATRAZO"};
+                    String[] titulos = {"FECVEN", "FECPAGO", "ESTADO", "CUOTA", "ATRAZO"};
 
                     TableRow ln_emcabezados = new TableRow(v.getContext());
                     ln_emcabezados.setBackgroundColor(Color.GREEN);
 
-                    for(int i=0;i<titulos.length;i++) {
+                    for (int i = 0; i < titulos.length; i++) {
 
                         TextView label = new TextView(v.getContext());
                         label.setText(titulos[i]);
-                        label.setPadding(5,5,5,5);
+                        label.setPadding(5, 5, 5, 5);
                         ln_emcabezados.addView(label);
                     }
 
                     tabla.addView(ln_emcabezados);
                     listado_amorizaciones.addView(tabla);
 
-                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
+                    for (DataSnapshot hijo : dataSnapshot.getChildren()) {
 
-                        if(hijo.getValue(amortizacion_cuota.class).getId_prestamo().equalsIgnoreCase(p.getId())) {
+                        if (hijo.getValue(amortizacion_cuota.class).getId_prestamo().equalsIgnoreCase(p.getId())) {
                             amortizacion_cuota amortz = hijo.getValue(amortizacion_cuota.class);
                             TableRow lnX2 = new TableRow(v.getContext());
                             lnX2.setOrientation(LinearLayout.HORIZONTAL);
 
-                            for(int i=0;i<titulos.length;i++) {
+                            for (int i = 0; i < titulos.length; i++) {
                                 TextView label = new TextView(v.getContext());
-                                switch (i){
+                                switch (i) {
                                     case 0:
                                         label.setText(amortz.getFecha_cuota());
                                         break;
@@ -429,17 +428,17 @@ public class listado_prestamo extends AppCompatActivity {
                                         label.setText(amortz.getEstado_descripcion());
                                         break;
                                     case 3:
-                                        label.setText(""+Math.round(amortz.getCuota()));
+                                        label.setText("" + Math.round(amortz.getCuota()));
                                         break;
                                     case 4:
-                                        double atrazo =  Math.ceil(
-                                                amortz.getCapital()+amortz.getInteres()
-                                                ) - amortz.getCuota();
+                                        double atrazo = Math.ceil(
+                                                amortz.getCapital() + amortz.getInteres()
+                                        ) - amortz.getCuota();
 
-                                        if(atrazo < 0){
-                                            atrazo=0;
+                                        if (atrazo < 0) {
+                                            atrazo = 0;
                                         }
-                                        label.setText(""+atrazo);
+                                        label.setText("" + atrazo);
                                         break;
                                 }
 
@@ -448,8 +447,8 @@ public class listado_prestamo extends AppCompatActivity {
                             tabla.addView(lnX2);
                         }
                     }
-                }else{
-                    Toast.makeText(listado_prestamo.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(listado_prestamo.this, "No se encontraron datos", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -461,66 +460,66 @@ public class listado_prestamo extends AppCompatActivity {
     }
 
 
-    private void set_listado_pagos(Prestamo p,View v){
+    private void set_listado_pagos(Prestamo p, View v) {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference ref = database.child(Prestamo_ctr.BBDD_NAME3).child(p.getId());
         final Query usuQuery = ref.orderByChild("fecha_alta_unix");
-        LinearLayout listado_amorizaciones = (LinearLayout) v.findViewById(R.id.prestamo_view_lista_amortizaciones);
-        TextView encabezado = (TextView) v.findViewById(R.id.prestamo_view_amortizaciones_encabezado);
+        LinearLayout listado_amorizaciones = (LinearLayout) v.findViewById(id.prestamo_view_lista_amortizaciones);
+        TextView encabezado = (TextView) v.findViewById(id.prestamo_view_amortizaciones_encabezado);
         encabezado.setText("HISTORICO PAGOS");
 
         usuQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     listado_amorizaciones.removeAllViews();//limpio el contenedor
                     TableLayout tabla = new TableLayout(v.getContext());
                     tabla.setStretchAllColumns(true);
                     tabla.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                    String[] titulos = {"FECPAGO","MONTO","CAPAMORT","INTAMORT","RECIBO"};
+                    String[] titulos = {"FECPAGO", "MONTO", "CAPAMORT", "INTAMORT", "RECIBO"};
 
                     TableRow ln_emcabezados = new TableRow(v.getContext());
                     ln_emcabezados.setBackgroundColor(Color.GREEN);
 
-                    for(int i=0;i<titulos.length;i++) {
+                    for (int i = 0; i < titulos.length; i++) {
 
                         TextView label = new TextView(v.getContext());
                         label.setText(titulos[i]);
-                        label.setPadding(5,5,5,5);
+                        label.setPadding(5, 5, 5, 5);
                         ln_emcabezados.addView(label);
                     }
 
                     tabla.addView(ln_emcabezados);
                     listado_amorizaciones.addView(tabla);
 
-                    for(DataSnapshot hijo: dataSnapshot.getChildren()) {
+                    for (DataSnapshot hijo : dataSnapshot.getChildren()) {
 
-                        if(hijo.getValue(com.example.teprestoonline.Modelo.Pago.class).getId_prestamo().equalsIgnoreCase(p.getId())) {
+                        if (hijo.getValue(com.example.teprestoonline.Modelo.Pago.class).getId_prestamo().equalsIgnoreCase(p.getId())) {
                             com.example.teprestoonline.Modelo.Pago pago
                                     = hijo.getValue(com.example.teprestoonline.Modelo.Pago.class);
 
                             TableRow lnX2 = new TableRow(v.getContext());
                             lnX2.setOrientation(LinearLayout.HORIZONTAL);
 
-                            for(int i=0;i<titulos.length;i++) {
+                            for (int i = 0; i < titulos.length; i++) {
                                 TextView label = new TextView(v.getContext());
-                                switch (i){
+                                switch (i) {
                                     case 0:
                                         label.setText(pago.getFecha_pago());
                                         break;
                                     case 1:
-                                        label.setText(""+pago.getMonto_pagado());
+                                        label.setText("" + pago.getMonto_pagado());
                                         break;
                                     case 2:
-                                        label.setText(""+Math.round(pago.getCapital_amortizado()));
+                                        label.setText("" + Math.round(pago.getCapital_amortizado()));
                                         break;
                                     case 3:
-                                        label.setText(""+Math.round(pago.getInteres_amortizado()));
+                                        label.setText("" + Math.round(pago.getInteres_amortizado()));
                                         break;
                                     case 4:
-                                        if(!pago.getRecibo_rutta().isEmpty()){
+                                        if (!pago.getRecibo_rutta().isEmpty()) {
                                             Button bt = new Button(v.getContext());
                                             bt.setText("*");
                                             bt.setOnClickListener(new View.OnClickListener() {
@@ -542,8 +541,8 @@ public class listado_prestamo extends AppCompatActivity {
                             tabla.addView(lnX2);
                         }
                     }
-                }else{
-                    Toast.makeText(listado_prestamo.this,"No se encontraron datos",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(listado_prestamo.this, "No se encontraron datos", Toast.LENGTH_LONG).show();
                 }
             }
 

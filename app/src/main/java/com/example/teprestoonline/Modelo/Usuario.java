@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class Usuario {
 
     private  String id;
-    private  String id_dispositivo;
     private  String clave;
     private  String usuario;
     private  String fecha_alta_humana;
@@ -73,7 +72,6 @@ public class Usuario {
         Calendar calendario =  Calendar.getInstance();
         setFecha_unix((calendario.getTimeInMillis() * -1));
         setFecha_unix_ult_mod((calendario.getTimeInMillis() * -1));
-        setId_dispositivo(contesto);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = df.format(calendario.getTime());
@@ -86,7 +84,6 @@ public class Usuario {
      public void set_datos_ultima_modificaion(Context contesto){
          Calendar calendario =  Calendar.getInstance();
          setFecha_unix_ult_mod((calendario.getTimeInMillis() * -1));
-         setId_dispositivo(contesto);
 
          SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
          String formattedDate = df.format(calendario.getTime());
@@ -117,11 +114,4 @@ public class Usuario {
         this.contador_clave = contador_clave;
     }
 
-    public String getId_dispositivo() {
-        return id_dispositivo;
-    }
-
-    public void setId_dispositivo(Context app) {
-        this.id_dispositivo = Settings.Secure.getString(app.getContentResolver(), Settings.Secure.ANDROID_ID);
-    }
 }

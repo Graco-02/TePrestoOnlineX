@@ -107,7 +107,9 @@ public class Inicio extends AppCompatActivity {
                 startActivity(lanzadera);
                 break;
             case R.id.inicio_reporte:
-                new estadisticas_pruebas(this);
+               // new estadisticas_pruebas(this);
+                Intent lanzadera2 = new Intent(this,Mantenimiento_estadisticas.class);
+                startActivity(lanzadera2);
                 break;
             case R.id.inicio_parametro:
                 new parametros_matenimiento(this,parametros);

@@ -275,7 +275,7 @@ public class Fecha_utiliti  extends Date{
         this.hora = hora;
     }
 
-    private int get_dias_mes(int mes,int year){
+    public int get_dias_mes(int mes,int year){
         if(mes == 4 || mes == 6 || mes == 9 || mes == 11){
             return 30;
         }else if (mes == 2){
