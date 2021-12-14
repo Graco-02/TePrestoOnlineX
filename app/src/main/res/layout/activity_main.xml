@@ -93,8 +93,22 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/link_nuevo_acceso"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:onClick="get_nuevo_acceso"
+                    android:text="SOLICITAR ACCESO"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/purple_200"
+                    android:textSize="12sp" />
+
             </LinearLayout>
         </ScrollView>
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

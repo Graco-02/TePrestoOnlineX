@@ -42,17 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         usu =new Usuario_ctr(this);
-
-       /* usu.set_borrar_tabla();
-        Usuario user = new Usuario();
-        user.set_datos_ultima_modificaion(this.getApplicationContext());
-        user.set_datos_unicos(this.getApplicationContext());
-        user.setUsuario("Graco");
-        user.setClave("1234");
-        usu.set_usuario(user);*/
-
         mAuth = FirebaseAuth.getInstance();
-
         get_validar_usuario_logueado();
 
     }
@@ -70,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
        // updateUI(currentUser);
     }
 
-
+    public void get_nuevo_acceso(View view){
+        new usuario_modifica_ventana().set_solcitar_nuevo_acceso(this);
+    }
 
     public void get_acceso(View view) {
         EditText txt_nombre = (EditText) findViewById(R.id.main_usuario_txt);
@@ -91,28 +83,34 @@ public class MainActivity extends AppCompatActivity {
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         if(hijo.getValue(Usuario.class).getUsuario().equalsIgnoreCase(usuario)) {
                             usuario_logueado = hijo.getValue(Usuario.class);
-                            if (usuario_logueado.getContador_clave() < 5) {
-                                if (usuario_logueado.getUsuario().equals(usuario)) {
-                                    if (usuario_logueado.getClave().equals(clave)) {
-                                        usuario_logueado.setContador_clave(0);
-                                        usu.set_usuario(usuario_logueado);
-                                        Intent lanzadera = new Intent(MainActivity.this, Inicio.class);
-                                        Usuario.usuario_logueado = usuario_logueado;
-                                        startActivity(lanzadera);
+                            if(usuario_logueado.getEstado()==1) { // valido la activacion del usuario
+                                if (usuario_logueado.getContador_clave() < 5) {//valido la cantidad de oportunidades de la clave
+                                    if (usuario_logueado.getUsuario().equals(usuario)) {//valido el nombre de usuario
+                                        if (usuario_logueado.getClave().equals(clave)) {//valido la clave
+                                            usuario_logueado.setContador_clave(0);
+                                            usu.set_usuario(usuario_logueado);
+                                            Intent lanzadera = new Intent(MainActivity.this, Inicio.class);
+                                            Usuario.usuario_logueado = usuario_logueado;
+                                            startActivity(lanzadera);
+                                        } else {
+                                            txt_clave.requestFocus();
+                                            txt_clave.setError("Clave Inexistente");
+                                            //sumo uno a la cantidad de intentos
+                                            usuario_logueado.setContador_clave(usuario_logueado.getContador_clave() + 1);
+                                            usu.set_usuario(usuario_logueado);
+                                        }
                                     } else {
-                                        txt_clave.requestFocus();
-                                        txt_clave.setError("Clave Inexistente");
-                                        //sumo uno a la cantidad de intentos
-                                        usuario_logueado.setContador_clave(usuario_logueado.getContador_clave()+1);
-                                        usu.set_usuario(usuario_logueado);
+                                        txt_nombre.requestFocus();
+                                        txt_nombre.setError("Usuario Inexistente");
                                     }
                                 } else {
-                                    txt_nombre.requestFocus();
-                                    txt_nombre.setError("Usuario Inexistente");
+                                    Toast.makeText(MainActivity.this,
+                                            "Cantidad de intentos agotada favor contactar al administrador",
+                                            Toast.LENGTH_SHORT).show();
                                 }
                             }else{
                                 Toast.makeText(MainActivity.this,
-                                        "Cantidad de intentos agotada favor contactar al administrador",
+                                        "Este usuario aun no ha sido activado",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }

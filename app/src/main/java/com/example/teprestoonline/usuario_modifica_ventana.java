@@ -5,9 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.teprestoonline.Controladores.Usuario_ctr;
 import com.example.teprestoonline.Modelo.Usuario;
+import com.example.teprestoonline.utilidades.Fecha_utiliti;
+
+import java.util.Calendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,6 +35,7 @@ public class usuario_modifica_ventana {
 
          txt_usuario = (EditText) v.findViewById(R.id.usuariomtn_usuario);
          txt_clave_ant = (EditText) v.findViewById(R.id.usuariomtn_clave_anterior);
+         txt_clave_ant.setVisibility(View.VISIBLE);
          txt_clave_new = (EditText) v.findViewById(R.id.usuariomtn_clave_nueva);
          txt_clave_confirm = (EditText) v.findViewById(R.id.usuariomtn_clave_confirm);
 
@@ -58,6 +63,64 @@ public class usuario_modifica_ventana {
         });
 
     }
+
+
+    public void set_solcitar_nuevo_acceso(AppCompatActivity view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(view);
+        builder.setTitle("Mantenimiento Usuarios");
+        LayoutInflater inflater = view.getLayoutInflater();
+        View v = inflater.inflate(R.layout.usuario_mant, null);
+        builder.setView(v);
+        builder.create();
+
+        txt_clave_ant = (EditText) v.findViewById(R.id.usuariomtn_clave_anterior);
+        txt_clave_ant.setVisibility(View.GONE);
+
+        txt_usuario = (EditText) v.findViewById(R.id.usuariomtn_usuario);
+        txt_clave_new = (EditText) v.findViewById(R.id.usuariomtn_clave_nueva);
+        txt_clave_confirm = (EditText) v.findViewById(R.id.usuariomtn_clave_confirm);
+
+        final AlertDialog ventana = builder.show();
+        ventana.setCanceledOnTouchOutside(false);
+
+        Button guardar = (Button) v.findViewById(R.id.usuario_modificar_bt);
+        guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(txt_clave_new.getText().toString().equals(txt_clave_confirm.getText().toString()) ){
+                        control = new Usuario_ctr(view.getContext());
+                        Usuario usuario = new Usuario();
+                        usuario.set_datos_unicos(null);
+                        usuario.set_datos_ultima_modificaion(null);
+
+                        usuario.setUsuario(txt_usuario.getText().toString());
+                        usuario.setContador_clave(0);
+                        usuario.setClave(txt_clave_confirm.getText().toString());
+                        usuario.setEstado(0);
+                        usuario.setFecha_activacion(new Fecha_utiliti().getFechaSystemaYYMMDD());
+
+                        Calendar calendario =  Calendar.getInstance();
+                        usuario.setFecha_activacion_unix((calendario.getTimeInMillis()));
+
+                        try {
+                            control.set_usuario(usuario); // realizo los cambios
+                            ventana.dismiss();
+                            Toast.makeText(view.getContext(), "Solcitud enviada debe esperar a que sea activado ",
+                                    Toast.LENGTH_LONG).show();
+
+                        }catch (Exception e){
+
+                        }
+
+                }else{
+                    txt_clave_confirm.setError("LA clave nueva y debe ser igual");
+                    txt_clave_confirm.requestFocus();
+                }
+            }
+        });
+    }
+
 
     private boolean get_validacion_datos(){
          if(txt_usuario.getText().toString().isEmpty() ){

@@ -23,6 +23,9 @@ public class Usuario {
     public final static String BBDD_NAME2 = "fecha_ultima_mod";
     public final static String BBDD_NAME3 = "fecha_ultima_mod_unix";
     private int contador_clave;
+    private int estado;
+    private  String fecha_activacion;
+    private  long fecha_activacion_unix;
 
 
     public static Usuario usuario_logueado;
@@ -78,7 +81,6 @@ public class Usuario {
         setFecha_alta_humana(formattedDate);
         setFecha_humana_ult_mod(formattedDate);
 
-        Toast.makeText(contesto,"Datos Genericos",Toast.LENGTH_LONG);
     }
 
      public void set_datos_ultima_modificaion(Context contesto){
@@ -114,4 +116,27 @@ public class Usuario {
         this.contador_clave = contador_clave;
     }
 
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
+    public String getFecha_activacion() {
+        return fecha_activacion;
+    }
+
+    public void setFecha_activacion(String fecha_activacion) {
+        this.fecha_activacion = fecha_activacion;
+    }
+
+    public long getFecha_activacion_unix() {
+        return fecha_activacion_unix;
+    }
+
+    public void setFecha_activacion_unix(long fecha_activacion_unix) {
+        this.fecha_activacion_unix = fecha_activacion_unix;
+    }
 }
