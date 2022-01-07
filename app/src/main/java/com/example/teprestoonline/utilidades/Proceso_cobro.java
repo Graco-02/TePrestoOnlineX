@@ -40,6 +40,7 @@ public class Proceso_cobro {
     }
 
     public void set_validaciones_prestamos_regulares(Prestamo p) {
+
         String fecha_proceso = new Fecha_utiliti().getFechaSystemaYYMMDD();
         int dias_transcurridos = 0;
 
@@ -52,7 +53,7 @@ public class Proceso_cobro {
         if(p.getPeriodo()==1){
             dias_transcurridos = dias_transcurridos +1;
         }
-
+      //  dias_transcurridos = 0;//esto para que no actualize los saldos
       //  if (dias_transcurridos > 0 && dias_transcurridos >= p.getPeriodo()){
         if (dias_transcurridos > 0 //valido que el perido sea mayor a el tope mas los dias de gracia
                 && dias_transcurridos >= (p.getPeriodo() + Inicio.parametros.getDias_gracia())

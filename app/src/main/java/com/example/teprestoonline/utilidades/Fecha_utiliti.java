@@ -74,32 +74,47 @@ public class Fecha_utiliti  extends Date{
         int year_t = (year2 - year);
         int mest = 0;
 
+        System.out.println("tratamiento de fechas ");
+        System.out.println(fecha + "   " + fecha2);
+        System.out.println("year2 = " + year2 + " mes2 = " + mes2 + "dias2 = " + dia2);
+        System.out.println("year = " + year + " mes = " + mes + "dias = " + dia);
+
         if (mes == 12 && mes2 < mes && year_t > 0){
             mest = mes2;
+            if (year_t == 1){
+                year_t = 0;
+            }else{
+                year_t-=1;
+            }
+
+            if (mest == 1){
+                mest = 0;
+            }else{
+                mest-=1;
+            }
         }else{
             mest = mes2 - mes;
         }
 
         int dia_t = dia2 - dia;
+        if (dia_t < 0){
+            dia_t = dia_t + dia + 1;
+        }
         //2021-03-31 - 2021-03-31
         //2021-2021 = 0
         //02 - 01 = 1 * 30 = 30
         //1 - 31 = 30
+        System.out.println("year_t = " + year_t + " mest = " + mest + "dia_t = " + dia_t);
 
-        /*
-        if(dia == get_dias_mes(mes,year)){
-            mest  = 0 ;
-            if(dia2 < dia){
-                dia_t = dia2;
-            }else  if(dia2 == dia){
-                dia_t = 0;
-            }else{
-                dia_t =  dia2 - dia;
-            }
-        }*/
+
+        System.out.println(" ------------------------------- ");
+        System.out.println("year2 = " + year2 + " mes2 = " + mes2 + "dias2 = " + dia2);
+        System.out.println("year = " + year + " mes = " + mes + "dias = " + dia);
+        System.out.println("year_t = " + year_t + " mest = " + mest + "dia_t = " + dia_t);
+
 
         int resultado = ( ( (year_t * 12) + mest ) * 30) + dia_t;
-
+        System.out.println("Resultado = " + resultado);
         return resultado;
     }
 

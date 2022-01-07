@@ -1,32 +1,26 @@
 package com.example.teprestoonline;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.teprestoonline.Controladores.Parametros_ctr;
 import com.example.teprestoonline.Controladores.Prestamo_ctr;
-import com.example.teprestoonline.Controladores.Usuario_ctr;
 import com.example.teprestoonline.Modelo.Parametros;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Usuario;
-import com.example.teprestoonline.Modelo.amortizacion_cuota;
+import com.example.teprestoonline.utilidades.Estadisticas;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
 import com.example.teprestoonline.utilidades.Proceso_cobro;
 import com.google.firebase.database.DataSnapshot;
@@ -107,8 +101,8 @@ public class Inicio extends AppCompatActivity {
                 startActivity(lanzadera);
                 break;
             case R.id.inicio_reporte:
-               // new estadisticas_pruebas(this);
-                Intent lanzadera2 = new Intent(this,Mantenimiento_estadisticas.class);
+             //   Intent lanzadera2 = new Intent(this,Mantenimiento_estadisticas.class);
+                Intent lanzadera2 = new Intent(this, Estadisticas.class);
                 startActivity(lanzadera2);
                 break;
             case R.id.inicio_parametro:
@@ -135,25 +129,29 @@ public class Inicio extends AppCompatActivity {
         LinearLayout ln = (LinearLayout) findViewById(R.id.inicio_proceso_view);
         builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               if(parametros.getFecultcobro()=="0001-01-01"
-                       || new Fecha_utiliti().get_fecha_numerica(parametros.getFecultcobro())
-                       < new Fecha_utiliti().get_fecha_numerica(new Fecha_utiliti().getFechaSystemaYYMMDD())
-               ) {
-                   if (procesado == false) {
-                       ln.setVisibility(View.VISIBLE);
-                       set_proceso_cobro();
-                       dialog.dismiss();
-                       procesado = true;
-                       parametros.setFecultcobro(new Fecha_utiliti().getFechaSystemaYYMMDD());
-                       new Parametros_ctr(getApplicationContext()).set_parametros(parametros);
-                   } else {
-                       ln.setVisibility(View.GONE);
-                       Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
-                   }
-               }else{
-                   ln.setVisibility(View.GONE);
-                   Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
-               }
+                try {
+                    if (parametros.getFecultcobro() == "0001-01-01"
+                            || new Fecha_utiliti().get_fecha_numerica(parametros.getFecultcobro())
+                            < new Fecha_utiliti().get_fecha_numerica(new Fecha_utiliti().getFechaSystemaYYMMDD())
+                    ) {
+                        if (procesado == false) {
+                            ln.setVisibility(View.VISIBLE);
+                            set_proceso_cobro();
+                            dialog.dismiss();
+                            procesado = true;
+                            parametros.setFecultcobro(new Fecha_utiliti().getFechaSystemaYYMMDD());
+                            new Parametros_ctr(getApplicationContext()).set_parametros(parametros);
+                        } else {
+                            ln.setVisibility(View.GONE);
+                            Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        ln.setVisibility(View.GONE);
+                        Toast.makeText(Inicio.this, "El proceso ya habia sido lanzado", Toast.LENGTH_LONG).show();
+                    }
+                }catch(NullPointerException e){
+                    Toast.makeText(Inicio.this, "Ah ocurrido un error interno favor contactar al administrador", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -170,6 +168,7 @@ public class Inicio extends AppCompatActivity {
     }
 
     private void set_proceso_cobro(){
+
         FirebaseDatabase database = null;
         final DatabaseReference myRef;
         database = FirebaseDatabase.getInstance();
@@ -185,13 +184,17 @@ public class Inicio extends AppCompatActivity {
                 if(dataSnapshot.exists()) {
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         Prestamo p = hijo.getValue(Prestamo.class);
-                        switch (p.getTipo()){
-                            case 0:
-                                procesamiento.set_validaciones_prestamos_regulares(p);
-                                break;
-                            case 1:
-                                procesamiento.set_validaciones_prestamos_cuotas(p);
-                                break;
+                        if (Usuario.usuario_logueado.getId().equalsIgnoreCase(p.getId_usuario())) {
+                            if(p.getRestante() > 0) {
+                                switch (p.getTipo()) {
+                                    case 0:
+                                        procesamiento.set_validaciones_prestamos_regulares(p);
+                                        break;
+                                    case 1:
+                                        procesamiento.set_validaciones_prestamos_cuotas(p);
+                                        break;
+                                }
+                            }
                         }
                     }
                 }else{

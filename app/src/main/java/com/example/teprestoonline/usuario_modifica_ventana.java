@@ -7,7 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.teprestoonline.Controladores.Parametros_ctr;
 import com.example.teprestoonline.Controladores.Usuario_ctr;
+import com.example.teprestoonline.Modelo.Parametros;
 import com.example.teprestoonline.Modelo.Usuario;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
 
@@ -105,6 +107,17 @@ public class usuario_modifica_ventana {
 
                         try {
                             control.set_usuario(usuario); // realizo los cambios
+                            Parametros pr = new Parametros();
+                            pr.setFecultcobro("0001-01-01");
+                            pr.set_datos_unicos(null);
+                            pr.set_datos_ultima_modificaion(null);
+                            pr.setId_usuario(usuario.getId());
+                            pr.setDispo_bt_nombre(" ");
+                            pr.setDispo_bt_mac(" ");
+                            pr.setPts_ganar(0);
+                            pr.setPts_perder(0);
+                            new Parametros_ctr(view.getContext()).set_parametros(pr);
+
                             ventana.dismiss();
                             Toast.makeText(view.getContext(), "Solcitud enviada debe esperar a que sea activado ",
                                     Toast.LENGTH_LONG).show();

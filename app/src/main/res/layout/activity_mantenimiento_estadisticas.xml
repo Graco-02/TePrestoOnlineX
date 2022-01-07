@@ -86,6 +86,12 @@
                     android:layout_height="300dp"
                     tools:ignore="MissingConstraints" />
 
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barra_graficas"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    tools:ignore="MissingConstraints" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
