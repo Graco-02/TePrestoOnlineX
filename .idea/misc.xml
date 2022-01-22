@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/TePrestoOnline2/app/src/main/res/layout/activity_estadisticas.xml" value="0.15" />
         <entry key="..\:/TePrestoOnline2/app/src/main/res/layout/activity_mantenimiento_estadisticas.xml" value="0.153125" />
+        <entry key="..\:/TePrestoOnline2/app/src/main/res/layout/activity_pago.xml" value="0.10997267759562841" />
+        <entry key="..\:/TePrestoOnline2/app/src/main/res/layout/prestamo_view.xml" value="0.10997267759562841" />
+        <entry key="..\:/TePrestoOnline2/app/src/main/res/menu/menu_reportes_estadisticos.xml" value="0.15234375" />
       </map>
     </option>
   </component>

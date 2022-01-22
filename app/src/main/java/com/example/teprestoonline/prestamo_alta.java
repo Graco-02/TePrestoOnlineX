@@ -2,6 +2,7 @@ package com.example.teprestoonline;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,20 @@ import com.example.teprestoonline.Modelo.amortizacion_cuota;
 import com.example.teprestoonline.utilidades.Conversor_archivos_byte;
 import com.example.teprestoonline.utilidades.Fecha_utiliti;
 import com.example.teprestoonline.utilidades.PDF_MAnager;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 public class prestamo_alta {
 
@@ -57,6 +66,7 @@ public class prestamo_alta {
     private Cliente cliente;
     private  AlertDialog ventana = null;
     private final String CT_PDF = ".pdf";
+    private final String CT_CONTRATOS = "CONTRATOS";
 
     public prestamo_alta(AppCompatActivity view){
         this.actividad = view;
@@ -319,6 +329,32 @@ public class prestamo_alta {
                     String nombre_contrato = p.getId()+"-"+new Fecha_utiliti().getFechaSystemaYYMMDD()+CT_PDF;
                     pdf_manager.set_proceso_generar_contrato(nombre_contrato , p , cliente);
                     p.setContrato_ruta(pdf_manager.getArchivo_pdf().getAbsolutePath().toString());
+
+                    //codigo para guardar respaldo en el cloud storage
+                    File archivo = pdf_manager.getArchivo_pdf();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference().child(CT_CONTRATOS);
+                    StorageReference archivo_guardar  = storageRef.child(archivo.getAbsolutePath().toString());
+                    Uri contratoUri = FileProvider.getUriForFile(actividad,
+                            actividad.getPackageName()
+                                    + ".provider", archivo);
+                    archivo_guardar.putFile(contratoUri).addOnSuccessListener(//creo el evento para tener certeza de la subida
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                          try {
+                              Toast.makeText(actividad, "Archivo subida correcta"
+                                      , Toast.LENGTH_LONG).show();
+                              Uri fichero_descargado = taskSnapshot.getUploadSessionUri();
+                              archivo_guardado(fichero_descargado,p);
+                          }catch (Exception e){
+                              Toast.makeText(prestamo_alta.this.actividad,
+                                      "ha ocurrido un error durante la subida",
+                                      Toast.LENGTH_LONG).show();
+                          }
+                        }
+                    });
+
                 }else{
                     p.setContrato_ruta("");
                 }
@@ -344,8 +380,11 @@ public class prestamo_alta {
 
     }
 
-
-
+    private void archivo_guardado(Uri fichero_descargado,Prestamo p) {
+        FirebaseDatabase bbdd = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = bbdd.getReference(CT_CONTRATOS).child(p.getId());
+        myRef.setValue(fichero_descargado.toString());
+    }
 
 
 }

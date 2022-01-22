@@ -104,13 +104,13 @@ public class Fecha_utiliti  extends Date{
         //2021-2021 = 0
         //02 - 01 = 1 * 30 = 30
         //1 - 31 = 30
-        System.out.println("year_t = " + year_t + " mest = " + mest + "dia_t = " + dia_t);
+     /*   System.out.println("year_t = " + year_t + " mest = " + mest + "dia_t = " + dia_t);
 
 
         System.out.println(" ------------------------------- ");
         System.out.println("year2 = " + year2 + " mes2 = " + mes2 + "dias2 = " + dia2);
         System.out.println("year = " + year + " mes = " + mes + "dias = " + dia);
-        System.out.println("year_t = " + year_t + " mest = " + mest + "dia_t = " + dia_t);
+        System.out.println("year_t = " + year_t + " mest = " + mest + "dia_t = " + dia_t);*/
 
 
         int resultado = ( ( (year_t * 12) + mest ) * 30) + dia_t;
@@ -187,25 +187,47 @@ public class Fecha_utiliti  extends Date{
         int mes2 = mes;
         int dia2= dia;
 
+        if(dia==get_dias_mes(mes,year) && mes == 12){
+            if (dias==1){
+                    year2+=1;
+                    mes2=1;
+                    dia2=1;
+            }else{
+                for (int i = 0; i < dias; i++) {
+                    dia2 += 1;
 
-        if(dias>1) {
-            for (int i = 0; i < dias; i++) {
-                dia2 += 1;
+                    if (dia2 > get_dias_mes(mes, year)) {
+                        dia2 -= get_dias_mes(mes, year);
+                        mes2++;
+                    }
 
-                if (dia2 > get_dias_mes(mes, year)) {
-                    dia2 -= get_dias_mes(mes, year);
-                    mes2++;
-                }
-
-                if (mes2 > 12) {
-                    mes2 = 1;
-                    year2++;
+                    if (mes2 > 12) {
+                        mes2 = 1;
+                        year2++;
+                    }
                 }
             }
+            return String.valueOf(year2) + "-" + String.valueOf(mes2) + "-" + String.valueOf(dia2) ;
         }else{
-            dia2 += 1;
+            if(dias>1) {
+                for (int i = 0; i < dias; i++) {
+                    dia2 += 1;
+
+                    if (dia2 > get_dias_mes(mes, year)) {
+                        dia2 -= get_dias_mes(mes, year);
+                        mes2++;
+                    }
+
+                    if (mes2 > 12) {
+                        mes2 = 1;
+                        year2++;
+                    }
+                }
+            }else{
+                dia2 += 1;
+            }
+            return String.valueOf(year2) + "-" + String.valueOf(mes2) + "-" + String.valueOf(dia2) ;
         }
-        return String.valueOf(year2) + "-" + String.valueOf(mes2) + "-" + String.valueOf(dia2) ;
     }
 
     public String get_fecha_quincena(String fecha){

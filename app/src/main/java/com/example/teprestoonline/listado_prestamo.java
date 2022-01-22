@@ -431,13 +431,20 @@ public class listado_prestamo extends AppCompatActivity {
                                         label.setText("" + Math.round(amortz.getCuota()));
                                         break;
                                     case 4:
-                                        double atrazo = Math.ceil(
+                                        double atrazo = Math.round(
                                                 amortz.getCapital() + amortz.getInteres()
-                                        ) - amortz.getCuota();
+                                        );
+
+                                        if(atrazo<amortz.getCuota()){
+                                            atrazo = amortz.getCuota();
+                                        }else{
+                                            atrazo-=amortz.getCuota();
+                                        }
 
                                         if (atrazo < 0) {
                                             atrazo = 0;
                                         }
+
                                         label.setText("" + atrazo);
                                         break;
                                 }

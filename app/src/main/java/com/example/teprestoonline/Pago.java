@@ -91,7 +91,13 @@ public class Pago extends AppCompatActivity {
                fecha = new Fecha_utiliti().getFechaSystemaYYMMDD();
             }
 
-            interes *= new Fecha_utiliti().getTiempo_Transcurido_DIAS_YYYYMMDD(fecha);
+            int tiempo_dias = new Fecha_utiliti().getTiempo_Transcurido_DIAS_YYYYMMDD(fecha);
+            if(tiempo_dias>=prestamo.getPeriodo()) {
+                interes *= tiempo_dias;
+            }else{
+                interes *= prestamo.getPeriodo();
+            }
+
             monto_restante+=interes;
 
             id_pago = prestamo.getId();
@@ -112,6 +118,7 @@ public class Pago extends AppCompatActivity {
                 case 0:
                     txt_tipo.setText("REGULAR");
                     mipago.setMonto_restante(Math.round(monto_restante));
+                    prestamo.setRestante(Math.round(monto_restante));
                     break;
                 default:
                     txt_tipo.setText("CUOTAS");
@@ -152,13 +159,6 @@ public class Pago extends AppCompatActivity {
                     set_proceso_amortiza_pago();
 
                     Toast.makeText(Pago.this,"Prestamo  Realizado  ",Toast.LENGTH_LONG).show();
-                    if(opcion_imp.isChecked()){
-                        //codigo para imprimir por impresora o pdf
-                    }
-
-                    if(opcion_pdf.isChecked()){
-                        //codigo para generar  PDF
-                    }
 
                 }else{
                    txt_monto_pago.setError("Se debe informar mayor a 0");
@@ -224,9 +224,19 @@ public class Pago extends AppCompatActivity {
                             if(amortz.getEstado()!=2 && monto_amortizar > 0) {
 
                                 monto_amortizar=Math.round(monto_amortizar);
-                                double capital = Math.ceil(amortz.getCapital());
+                                double capital = Math.round(amortz.getCapital());
                                 double interes = Math.round(amortz.getInteres());
                                 double cuota= amortz.getCuota();
+
+                                double total = capital + interes;
+                                if(total < cuota){
+                                    capital = Math.ceil(amortz.getCapital());
+                                    total = capital + interes;
+                                    if(total < cuota){
+                                        interes = Math.ceil(amortz.getInteres());
+                                    }
+                                }
+
                                 interes_amortizado = 0;
                                 capital_amortizado = 0;
 

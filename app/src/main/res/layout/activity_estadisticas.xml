@@ -129,7 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/estadisticas_pagos"
@@ -194,7 +194,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/estadisticas_fin"
@@ -236,7 +236,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="50"
-                            android:text="Total Recibido"
+                            android:text="Total Financiado"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textSize="16sp"

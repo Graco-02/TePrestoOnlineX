@@ -3,8 +3,11 @@ package com.example.teprestoonline.utilidades;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -19,6 +22,9 @@ import com.example.teprestoonline.Modelo.Pago;
 import com.example.teprestoonline.Modelo.Prestamo;
 import com.example.teprestoonline.Modelo.Usuario;
 import com.example.teprestoonline.R;
+import com.example.teprestoonline.mantenimiento_clientes;
+import com.example.teprestoonline.parametros_matenimiento;
+import com.example.teprestoonline.usuario_modifica_ventana;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -226,7 +232,6 @@ public class Estadisticas extends AppCompatActivity {
                 if(dataSnapshot.exists()) {
                     for(DataSnapshot hijo: dataSnapshot.getChildren()) {
                         Pago pago = hijo.getValue(Pago.class);
-                        System.out.println("PAGOS");
                         if(pago.getFecha_pago()!=null
                                 && pago.getId_usuario().equalsIgnoreCase(Usuario.usuario_logueado.getId())) {
                             listado_pagos.add(pago);
@@ -243,6 +248,28 @@ public class Estadisticas extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_reportes_estadisticos,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem opcion_menu){
+        int id = opcion_menu.getItemId();
+
+        switch (id){
+            case R.id.est_menu_cli_atrz:
+                break;
+            case R.id.est_menu_cli_atrzt:
+                break;
+            case R.id.est_menu_detalle_operaciones:
+                break;
+        }
+        return super.onOptionsItemSelected(opcion_menu);
     }
 
 }
